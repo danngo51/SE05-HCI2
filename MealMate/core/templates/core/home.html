@@ -1,0 +1,11 @@
+<h1>Welcome, {{ request.user.first_name }}!</h1>
+<form method="get" action="">
+    <input type="text" name="search" placeholder="Search recipes">
+    <button type="submit">Search</button>
+</form>
+<h2>Recommended Recipes</h2>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+</form>
