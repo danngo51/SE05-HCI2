@@ -1,7 +1,53 @@
-<h1>Log In</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log in</button>
-</form>
-<p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMate - Log in</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
+    <script src="{% static 'users/scripts/script.js' %}" defer></script>
+</head>
+<body>
+    <div class="left-container">
+        <div class="logo">
+            <img src="{% static 'users/images/Logo.png' %}" 
+            alt="MealMate Logo" 
+            onclick="window.location.href='{% url 'frontpage' %}'">
+            <h1>MealMate</h1>
+        </div>
+
+        <form method="post" class="signin-form">
+            {% csrf_token %}
+            <!-- Email -->
+            <div class="input-container">
+                <label for="{{ form.username.id_for_label }}">Email</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors }}</div>
+                {% endif %}
+                <button type="button" class="clear-btn" onclick="clearField('{{ form.username.id_for_label }}')">&times;</button>
+            </div>
+
+            <!-- Password -->
+            <div class="input-container">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="error">{{ form.password.errors }}</div>
+                {% endif %}
+                <button type="button" class="clear-btn" onclick="clearField('{{ form.password.id_for_label }}')">&times;</button>
+            </div>
+
+            <button type="submit" class="button">Log in</button>
+        </form>
+
+        <div class="footer">
+            <a href="#" onclick="history.back()">Go back</a>
+        </div>
+    </div>
+    <div class="right-container" 
+         style="background-image: url('{% static 'users/images/Login.png' %}');">
+    </div>
+</body>
+</html>

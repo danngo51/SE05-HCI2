@@ -148,3 +148,8 @@ LOGOUT_REDIRECT_URL = '/'  # Redirect to the front page after logout
 
 # Login URL (used for views that require login)
 LOGIN_URL = '/users/login/'  # URL for login page
+
+# Tell Django to use the new CustomUser model
+AUTHENTICATION_BACKENDS = ['users.backends.EmailAsUsernameBackend'] # Allow Django to use email as the username
+
+
