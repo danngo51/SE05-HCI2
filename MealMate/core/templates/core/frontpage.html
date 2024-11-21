@@ -1,3 +1,35 @@
-<h1>Welcome to Recipe App</h1>
-<a href="{% url 'login' %}">Log in</a>
-<a href="{% url 'register' %}">Sign up</a>
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>frontpage</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/frontpage.css' %}">
+    <script src="{% static 'core/scripts/script.js' %}" defer></script>
+
+</head>
+<body>
+    <div class="container">
+       
+        <div class="header">
+            <a href="#" class="signup" onclick="navigateTo('users/register')" >Sign up</a>
+            <a href="#" class="login" onclick="navigateTo('users/login')" >Log in</a>
+            <div class="logo">
+                <img src="{% static 'core/images/Logo.png' %}" 
+                alt="MealMate Logo" 
+                onclick = "navigateTo('frontpage')">
+            </div>
+        </div>
+
+
+
+        <div class="background-section"
+        style="background-image: url('{% static 'core/images/Frontpage_Background.png' %}');">
+            <h1 class="title">MealMate</h1>
+                <p class="overlay-text">Get your own personalized <br> meal recommendation & recipes!</p>
+                <a href="#" class="button" onclick="navigateTo('users/register')" >Get started! </a>
+        </div>
+    </div>
+</body>
+</html>
