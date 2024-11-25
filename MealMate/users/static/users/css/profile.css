@@ -1,0 +1,165 @@
+ body {
+     font-family: Rimouski, sans-serif;
+     margin: 0;
+     display: flex;
+     height: 100vh;
+     background-color: #D9CBCB30;
+ }
+
+ .sidebar {
+     background-color: #FA996566;
+     width: 250px;
+     padding: 0;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+
+ .square-image {
+     border-radius: 0%;
+     width: 254px;
+     height: 200px;
+ }
+
+ .round-image {
+     border-radius: 50%;
+     width: 100px;
+     height: 100px;
+     cursor: pointer;
+ }
+
+ .header {
+     background-color: #FFA07A;
+     width: 100%;
+     height: 120px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     box-sizing: border-box;
+     margin-bottom: 20px;
+ }
+
+ .header-logo {
+     width: 100px;
+     height: auto;
+     cursor: pointer;
+ }
+
+ .sidebar h3 {
+     margin: 10px 0;
+     font-size: 25px;
+     text-align: center;
+ }
+
+ .menu {
+     list-style-type: none;
+     padding: 0;
+     width: 100%;
+ }
+
+ .menu li {
+     margin: 10px 0;
+ }
+
+ .menu a {
+     text-decoration: none;
+     color: #333;
+     font-size: 16px;
+     display: flex;
+     align-items: center;
+     padding: 10px;
+     text-align: left;
+     border-radius: 25px;
+     transition: background-color 0.3s, color 0.3s;
+ }
+
+ .menu a i {
+     margin-right: 8px;
+     font-size: 18px;
+ }
+
+ .menu .active {
+     background-color: #ffa07a;
+     color: white;
+ }
+
+ .menu a:hover {
+     background-color: #ffa07a30;
+     color: #333;
+ }
+
+ .logout {
+     margin-top: auto;
+     color: #333;
+     font-size: 28px;
+     text-decoration: none;
+     text-align: center;
+     margin-top: 160px;
+     margin-bottom: 10px;
+     cursor: pointer;
+ }
+
+ .logout-button {
+     background-color: #ff4d4d;
+     /* Example red color */
+     color: #ffffff;
+     padding: 10px 20px;
+     border: none;
+     border-radius: 5px;
+     font-size: 16px;
+     font-weight: bold;
+     cursor: pointer;
+     text-align: center;
+     display: inline-block;
+     transition: background-color 0.3s;
+ }
+
+ .logout-button:hover {
+     background-color: #cc0000;
+     /* Darker red on hover */
+ }
+
+ .main-content {
+     flex-grow: 1;
+     padding: 40px;
+     background-color: transparent;
+ }
+
+ .main-content h2 {
+     font-size: 24px;
+     margin-bottom: 20px;
+ }
+
+ .form-group {
+     margin-bottom: 20px;
+ }
+
+ .form-group label {
+     font-size: 14px;
+     font-family: 'Rimouski';
+     color: #333333;
+     font-weight: bold;
+     margin-bottom: 5px;
+     display: block;
+ }
+
+
+ .form-group input[type="text"],
+ .form-group input[type="password"] {
+     width: 100%;
+     padding: 10px;
+     font-size: 16px;
+     border: 1px solid #ccc;
+     border-radius: 5px;
+     box-sizing: border-box;
+ }
+
+ .save-btn {
+     background-color: #ffa07a;
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     font-size: 16px;
+     border-radius: 5px;
+     cursor: pointer;
+ }

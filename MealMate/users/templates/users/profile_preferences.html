@@ -1,0 +1,45 @@
+{% extends 'users/profile_base.html' %}
+
+{% block title %}Profile Details{% endblock %}
+
+{% block content %}
+
+<!-- Main Content -->
+<div class="main-content">
+    <h2>Account Settings</h2>
+
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="text" id="email" name="email" placeholder="Value">
+    </div>
+
+    <div class="form-group">
+        <label for="first-name">First name</label>
+        <input type="text" id="first-name" name="first-name" placeholder="Value">
+    </div>
+
+    <div class="form-group">
+        <label for="last-name">Last name</label>
+        <input type="text" id="last-name" name="last-name" placeholder="Value">
+    </div>
+
+    <h3>Change password</h3>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Value">
+    </div>
+
+    <div class="form-group">
+        <label for="new-password">New password</label>
+        <input type="password" id="new-password" name="new-password" placeholder="Value">
+    </div>
+
+    <div class="form-group">
+        <label for="confirm-password">Confirm new password</label>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Value">
+    </div>
+
+    <button class="save-btn">Save</button>
+</div>
+{% endblock %}

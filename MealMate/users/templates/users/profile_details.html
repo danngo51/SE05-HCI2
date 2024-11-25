@@ -1,0 +1,23 @@
+{% extends 'users/profile_base.html' %}
+
+{% block title %}Profile Details{% endblock %}
+
+{% block content %}
+<h2>Profile Details</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="text" id="email" name="email" value="{{ user.email }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="first-name">First name</label>
+        <input type="text" id="first-name" name="first_name" value="{{ user.first_name }}">
+    </div>
+    <div class="form-group">
+        <label for="last-name">Last name</label>
+        <input type="text" id="last-name" name="last_name" value="{{ user.last_name }}">
+    </div>
+    <button class="save-btn" type="submit">Save</button>
+</form>
+{% endblock %}
