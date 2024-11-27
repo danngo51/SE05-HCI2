@@ -14,7 +14,7 @@
         <img id="logo" 
         src="{% static 'core/images/Logo.png' %}" 
         alt="MealMate Logo" 
-        onclick="redirectTo('{% url 'frontpage' %}')">
+        onclick="navigateTo('frontpage')">
         <h1>MealMate</h1>
     </div>
  <!-- Form Container -->
@@ -73,7 +73,7 @@
 
 <!-- Footer -->
 <div class="footer">
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    <p>Already have an account? <a href="navigateTo('login')">Log in</a></p>
     <a href="#" class="go-back" onclick="history.back()">Go back</a>
 </div>
 </body>
