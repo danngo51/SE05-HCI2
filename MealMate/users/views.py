@@ -32,3 +32,30 @@ def preferences(request):
 @login_required
 def history(request):
     return render(request, 'users/profile_history.html')
+
+
+### PREFERENCES ###
+def health_concerns(request):
+    return render(request, 'users/pref_health_concerns.html')
+
+def budget(request):
+    return render(request, 'users/pref_budget.html')
+
+def diet_preferences(request):
+    return render(request, 'users/pref_diet.html')
+
+def dishes_preferences(request):
+    return render(request, 'users/pref_dishes.html')
+
+def final_page(request):
+    return render(request, 'users/pref_done.html')
+
+### MAIN ###
+def main(request):
+    return render(request, 'users/main.html')
+
+def recipe(request):
+    return render(request, 'users/recipe.html')
+
+def change_options(request):
+    return render(request, 'users/change_options.html')

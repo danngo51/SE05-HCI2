@@ -1,0 +1,112 @@
+/* Body 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* 헤더 */
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.recipe-header h1 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+}
+
+.back-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* 요리 정보 섹션 */
+.recipe-info {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-info .time, .recipe-info .servings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.recipe-info input[type="text"] {
+    width: 50px;
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.recipe-info select {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* 레시피 콘텐츠 */
+.recipe-content {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.ingredients, .instructions {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    width: 48%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ingredients h2, .instructions h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.ingredients ul, .instructions ol {
+    margin-top: 10px;
+    padding-left: 20px;
+    color: #555;
+}
+
+.ingredients ul ul, .instructions ol ul {
+    padding-left: 20px;
+}
+
+.instructions ol li {
+    margin-bottom: 10px;
+}
+
+.instructions ol li strong {
+    color: #333;
+}

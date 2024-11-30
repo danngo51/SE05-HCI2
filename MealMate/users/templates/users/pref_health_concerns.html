@@ -1,0 +1,40 @@
+{% extends 'users/pref_base.html' %}
+
+{% block title %}Health Concerns{% endblock %}
+
+{% block content %}
+<div class="question-container">
+    <h1>Q. Do you have any health concerns?</h1>
+    <p class="subtitle">Allergies and health conditions (e.g. diabetes, celiac disease, hypertension)</p>
+
+    <!-- Input list container -->
+    <div id="input-list-container" class="input-list-container">
+        <div class="input-container">
+            <input type="text" placeholder="Enter your health concerns." class="health-input">
+            <p class="warning-message"></p>
+        </div>
+    </div>
+
+    <!-- Add Button -->
+    <button class="add-button" onclick="addInputField()">+ Add</button>
+
+    <div class="navigation-buttons">
+        <a href="{% url 'budget' %}" class="skip-button">Skip</a>
+        <a href="#" class="next-button" data-next-url="{% url 'budget' %}" onclick="validateInputs(event)">Next</a>
+    </div>
+
+    <!-- Page Dots -->
+    <div class="page-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setActiveDot(0); 
+    });
+</script>
+{% endblock %}

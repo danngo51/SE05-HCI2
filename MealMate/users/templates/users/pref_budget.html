@@ -1,0 +1,47 @@
+{% extends 'users/pref_base.html' %}
+
+{% block title %}Budget{% endblock %}
+
+{% block content %}
+<div class="question-container">
+    <h1>Q. What's your budget?</h1>
+    <p class="subtitle">For one meal, one person</p>
+
+    <form class="budget-form">
+        <div class="option">
+            <input type="radio" id="budget1" name="budget" value="under10">
+            <label for="budget1">- $10</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="budget2" name="budget" value="10to20">
+            <label for="budget2">$10 - $20</label>
+        </div>
+        <div class="option">
+            <input type="radio" id="budget3" name="budget" value="over20">
+            <label for="budget3">$20 -</label>
+        </div>
+        <!-- Warning message for radio buttons -->
+        <p class="radio-warning-message"></p>
+    </form>
+
+    <div class="navigation-buttons">
+        <a href="{% url 'health_concerns' %}" class="back-button">Back</a>
+        <a href="#" class="next-button" data-next-url="{% url 'diet' %}" onclick="validateInputs(event)">Next</a>
+        <a href="{% url 'diet' %}" class="skip-button">Skip</a>
+    </div>
+
+    <!-- Page Dots -->
+    <div class="page-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setActiveDot(1); 
+    });
+</script>
+{% endblock %}

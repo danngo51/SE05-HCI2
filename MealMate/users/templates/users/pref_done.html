@@ -1,0 +1,14 @@
+{% extends 'users/pref_base.html' %}
+
+{% block title %}All Set{% endblock %}
+
+{% block content %}
+<div class="question-container">
+    <h1>You’re all set!</h1>
+    <p class="subtitle">Enjoy your recipes.</p>
+
+    <div class="final-navigation">
+        <a href="{% url 'main' %}" class="explore-button">Explore</a>
+    </div>
+</div>
+{% endblock %}

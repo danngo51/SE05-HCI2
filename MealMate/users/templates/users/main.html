@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Recipes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/main.css' %}">
+</head>
+<body>
+    <header class="explore-header">
+        <div class="logo">
+            <img src="{% static 'core/images/Logo.png' %}" alt="Logo">
+            <h1 class="meal-mate-title">MealMate</h1>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search, e.g. Indian, pasta, spicy etc.">
+            <button>🔍</button>
+        </div>
+        <div class="user-actions">
+            <a href="{% url 'change_options' %}" class="preferences">Preferences</a>
+            <button class="profile-button" onclick="window.location.href='{% url 'profile_details' %}'">
+                <img src="{% static 'core/images/Logo.png' %}" alt="User Profile">
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="menu-items">
+            <div class="menu-item">
+                <a href="{% url 'recipe' %}">
+                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
+                    <h3>Spaghetti Bolognese</h3>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'recipe' %}">
+                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
+                    <h3>Sushi</h3>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'recipe' %}">
+                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
+                    <h3>Bibimbap</h3>
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

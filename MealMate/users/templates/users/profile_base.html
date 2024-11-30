@@ -18,7 +18,7 @@
             <img src="{% static 'core/images/Logo.png' %}" 
             alt="MealMate Logo"
             class="header-logo"
-            onclick="navigateTo('home')">
+            onclick="navigateTo('{% url 'main' %}')">
         </div>
 
         <!-- Round picture -->
@@ -30,7 +30,7 @@
             <li><a href="{% url 'profile_details' %}" class="{% if request.resolver_match.url_name == 'profile_details' %}active{% endif %}">
                     <i class="fas fa-user"></i> Profile details
                 </a></li>
-            <li><a href="{% url 'profile_preferences' %}" class="{% if request.resolver_match.url_name == 'profile_preferences' %}active{% endif %}">
+            <li><a href="{% url 'change_options' %}" class="{% if request.resolver_match.url_name == 'change_options' %}active{% endif %}">
                     <i class="fas fa-cog"></i> Preferences
                 </a></li>
             <li><a href="{% url 'profile_history' %}" class="{% if request.resolver_match.url_name == 'profile_history' %}active{% endif %}">

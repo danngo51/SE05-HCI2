@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change My Options</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/css/change_options.css' %}">
+</head>
+<body>
+    <div class="container">
+        <button class="close-button" onclick="history.back()">✖</button>
+        <div class="options">
+            <!-- Section 1: Health Concerns -->
+            <div class="option-section">
+                <h2>1. Health concerns</h2>
+                <p>Allergies and health conditions (e.g. diabetes, celiac disease, hypertension)</p>
+                <div class="input-container">
+                    <input type="text" class="health-input" placeholder="Enter your health concerns.">
+                    <button class="add-button">+ Add</button>
+                </div>
+            </div>
+            <!-- Section 2: Budget -->
+            <div class="option-section">
+                <h2>2. Budget</h2>
+                <p>For one meal, one person</p>
+                <form class="budget-form">
+                    <div class="option">
+                        <input type="radio" id="option1" name="budget" value="10">
+                        <label for="option1">- $10</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="option2" name="budget" value="10-20">
+                        <label for="option2">$10 - $20</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="option3" name="budget" value="20+">
+                        <label for="option3">$20 -</label>
+                    </div>
+                </form>
+            </div>
+            <!-- Section 3: Diet Styles -->
+            <div class="option-section">
+                <h2>3. Diet styles</h2>
+                <p>Specific diets, food restrictions, or ingredients you avoid</p>
+                <div class="input-container">
+                    <input type="text" class="diet-input" placeholder="Enter your diet styles.">
+                    <button class="add-button">+ Add</button>
+                </div>
+            </div>
+            <!-- Section 4: Preferences -->
+            <div class="option-section">
+                <h2>4. Preferences</h2>
+                <p>Any specific meals or ingredients that you really like</p>
+                <div class="input-container">
+                    <input type="text" class="preferences-input" placeholder="Enter your preferences.">
+                    <button class="add-button">+ Add</button>
+                </div>
+            </div>
+            <!-- Save Changes Button -->
+            <button class="save-button" onclick="history.back()">Save changes</button>
+        </div>
+    </div>
+</body>
+</html>

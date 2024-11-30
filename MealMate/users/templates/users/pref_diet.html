@@ -1,0 +1,41 @@
+{% extends 'users/pref_base.html' %}
+
+{% block title %}Diet Preferences{% endblock %}
+
+{% block content %}
+<div class="question-container">
+    <h1>Q. What's your diet preferences?</h1>
+    <p class="subtitle">Specific diets, food restrictions, or ingredients you avoid</p>
+
+    <!-- Input list container -->
+    <div id="input-list-container" class="input-list-container">
+        <div class="input-container">
+            <input type="text" placeholder="Enter your diet styles." class="health-input">
+            <p class="warning-message"></p>
+        </div>
+    </div>
+
+    <!-- Add Button -->
+    <button class="add-button" onclick="addInputField()">+ Add</button>
+
+    <div class="navigation-buttons">
+        <a href="{% url 'budget' %}" class="back-button">Back</a>
+        <a href="#" class="next-button" data-next-url="{% url 'dishes' %}" onclick="validateInputs(event)">Next</a>
+        <a href="{% url 'dishes' %}" class="skip-button">Skip</a>
+    </div>
+
+    <!-- Page Dots -->
+    <div class="page-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setActiveDot(2); 
+    });
+</script>
+{% endblock %}

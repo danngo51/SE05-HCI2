@@ -1,0 +1,246 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* background: linear-gradient(to bottom, #fff, #f7f1f1); */
+    background: url('/static/users/images/pref_bg.png') no-repeat center center fixed;
+    background-size: cover; /* 이미지가 화면에 꽉 차도록 설정 */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.question-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 45px;
+    padding: 40px;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+    -webkit-backdrop-filter: brightness(0.8) blur(1px);
+    backdrop-filter: brightness(0.8) blur(1px);
+    /* mix-blend-mode: overlay; */
+}
+
+.question-container h1 {
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.question-container .subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.input-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px; /* 간격을 줄이기 위해 기존 15px에서 10px로 변경 */
+}
+
+.input-container {
+    position: relative;
+    /* display: flex; */
+    flex-direction: column;
+    align-items: center;
+}
+
+.health-input {
+    width: 80%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.warning-message {
+    font-size: 0.8rem;
+    color: red;
+    margin-top: 5px; /* 필드와 메시지 사이 간격은 유지 */
+    text-align: center;
+    width: 100%;
+}
+
+.add-button {
+    margin-top: 1px; /* Add 버튼 위의 간격도 줄이기 위해 기존 15px에서 10px로 변경 */
+    padding: 7px 15px;
+    font-size: 1rem;
+    /* background-color: #00a86b; */
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    text-decoration: underline;
+}
+
+/* 삭제 버튼 */
+.delete-button {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.delete-button:hover {
+    color: darkred;
+}
+
+/* 공통 버튼 스타일 */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between; /* 버튼들을 양쪽 끝과 중앙에 배치 */
+    align-items: center;
+    margin-top: 20px;
+    width: 100%; /* 버튼 컨테이너 전체 너비 */
+    max-width: 600px; /* 버튼 컨테이너 최대 너비 */
+    margin-left: auto;
+    margin-right: auto; /* 중앙 정렬 */
+    margin-top: 70px; /* Add 버튼 아래의 여백을 20px로 설정 */
+    gap: 20px; /* 버튼 사이 간격 */
+}
+
+.navigation-buttons a {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    flex: 0; /* 버튼의 길이를 글자 길이에 맞춤 */
+}
+
+/* Next 버튼 스타일 */
+.navigation-buttons a.next-button {
+    background-color: #65CB9B;
+    color: #09393D;
+    border: 3px solid #09393D;
+}
+
+/* Back 버튼 스타일 */
+.navigation-buttons a.back-button {
+    background-color: transparent;
+    color: #333;
+}
+
+/* Skip 버튼 스타일 */
+.navigation-buttons a.skip-button {
+    background-color: transparent;
+    color: #333;
+}
+
+/* 호버 효과 */
+.navigation-buttons a:hover {
+    text-decoration: underline;
+    /* background-color: #FA9965; */
+}
+
+.navigation-buttons a.next-button:hover {
+    text-decoration: underline;
+    background-color: #ff8e51;
+}
+
+.budget-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.budget-form .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.budget-form input[type="radio"] {
+    transform: scale(1.2);
+}
+
+.budget-form label {
+    font-size: 1rem;
+    color: #333;
+}
+
+.final-navigation {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.final-navigation .explore-button {
+    background-color: #65CB9B;
+    color: #09393D;
+    border: 3px solid #09393D;
+    margin-top: 30px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    flex: 0; /* 버튼의 길이를 글자 길이에 맞춤 */
+}
+
+.final-navigation .explore-button:hover {
+    text-decoration: underline;
+    background-color: #ff8e51;
+}
+
+.page-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* 네비게이션 버튼과의 간격 */
+    gap: 10px; /* 점 사이의 간격 */
+}
+
+.page-dots .dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ccc; /* 기본 점 색상 */
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.page-dots .dot.active {
+    background-color: #65CB9B; /* 활성화된 점 색상 */
+}
+
+input[type='radio'] {
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+    width: 15px;
+    height: 15px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    outline: none; 
+    cursor: pointer;
+  }
+  
+  input[type='radio']:checked {
+    background-color: #65CB9B; 
+    border: 3px solid white;
+    box-shadow: 0 0 0 1.6px #65CB9B;
+  }
