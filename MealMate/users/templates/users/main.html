@@ -6,6 +6,7 @@
     <title>Explore Recipes</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'users/css/main.css' %}">
+
 </head>
 <body>
     <header class="explore-header">
@@ -16,6 +17,7 @@
         <div class="search-bar">
             <input type="text" placeholder="Search, e.g. Indian, pasta, spicy etc.">
             <button>🔍</button>
+           
         </div>
         <div class="user-actions">
             <a href="{% url 'change_options' %}" class="preferences">Preferences</a>
@@ -29,20 +31,50 @@
         <div class="menu-items">
             <div class="menu-item">
                 <a href="{% url 'recipe' %}">
-                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
                     <h3>Spaghetti Bolognese</h3>
+                    <h4>Cooking time: 1 hour</h4>
+                    <h5>
+                        <span class="hashtagA">#Test1</span>
+                        <span class="hashtagB">#Test2</span>
+                        <span class="hashtagC">#Test3</span>
+                        <span class="hashtagD">#Test4</span>
+                        <span class="hashtagA">#Test5</span>
+                        <span class="hashtagB">#Test6</span>
+                        <span class="hashtagC">#Test7test</span>
+                        <span class="hashtagD">#Test8</span>
+                    </h5>
                 </a>
             </div>
             <div class="menu-item">
                 <a href="{% url 'recipe' %}">
-                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
                     <h3>Sushi</h3>
+                    <h4>Cooking time: 1 hour</h4>
+                    <h5>                      
+                        <span class="hashtagA">#Test1</span>
+                        <span class="hashtagB">#Test2</span>
+                        <span class="hashtagC">#Test3</span>
+                        <span class="hashtagD">#Test4</span>
+                        <span class="hashtagA">#Test5</span>
+                        <span class="hashtagB">#Test6</span>
+                        <span class="hashtagC">#Test7</span>
+                        <span class="hashtagD">#Test8</span>
+                    </h5>
                 </a>
             </div>
             <div class="menu-item">
-                <a href="{% url 'recipe' %}">
-                    <img src="https://via.placeholder.com/200x150" alt="Bibimbap">
+                    <a href="{% url 'recipe' %}">  
                     <h3>Bibimbap</h3>
+                    <h4>Cooking time: 2 hour</h4>
+                    <h5>            
+                        <span class="hashtagA">#Test1</span>
+                        <span class="hashtagB">#Test2</span>
+                        <span class="hashtagC">#Test3</span>
+                        <span class="hashtagD">#Test4</span>
+                        <span class="hashtagA">#Test5</span>
+                        <span class="hashtagB">#Test6</span>
+                        <span class="hashtagC">#Test7</span>
+                        <span class="hashtagD">#Test8</span>
+                    </h5>
                 </a>
             </div>
         </div>

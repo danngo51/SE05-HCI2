@@ -112,12 +112,17 @@ body {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 60px;
     margin-top: 20px;
 }
 
 .menu-item {
-    width: 200px;
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    justify-content: space-between; /* Ensure the content takes up available space */
+    align-items: center;
+    width: 350px;
+    min-height: 50px; /* Set a minimum height to ensure it fits content */
     background-color: white;
     border: 2px solid #ddd;
     border-radius: 10px;
@@ -125,18 +130,103 @@ body {
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
+   
+    /* width: 350px;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;*/
 }
 
-.menu-item img {
+/* .menu-item img {
     width: 100%;
     height: 150px;
     object-fit: cover;
-}
+} */
+
 
 .menu-item h3 {
-    font-size: 1rem;
+    font-size: 1.8rem;
+    text-decoration: underline;
     color: #333;
     margin: 10px 0;
+}
+
+a {
+    text-decoration: none; /* Ta bort understrykning */
+    color: inherit; /* Ärva textfärgen från föräldraelementet */
+}
+
+
+.menu-item h4 {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 7px 0;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.menu-item h5 {
+    display: flex;
+    flex-wrap: wrap; /* Gör att hashtagsen bryts till nästa rad vid behov */
+    gap: 10px; /* Utrymme mellan hashtags */
+    justify-content: center;
+    margin: 10px 20px; /* Utrymme runt hela blocket */
+}
+
+.menu-item h5 span {
+    padding: 5px 10px; /* Lite utrymme runt texten i varje hashtag */
+    background-color: #f0f0f0; /* Bakgrundsfärg för att göra boxarna synliga */
+    border-radius: 5px; /* Ger rundade hörn */
+    text-align: center;
+    white-space: nowrap; /* Hindrar texten från att brytas */
+}
+
+/* Style for individual hashtags */
+.menu-item h5 .hashtagA {
+    margin-left: 40px;
+    background-color: #f0f0f0; /* Light gray background */
+    display: inline-block; /* Ensures the background only wraps around each span */
+    padding: 3px 5px; /* Add some space inside the background */
+    margin: 0; /* Add spacing between hashtags */
+    border-radius: 5px; /* Optional rounded corners */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    margin: 0px;
+}
+
+.menu-item h5 .hashtagB {
+    background-color: #57d2e8; /* Light gray background */
+    display: inline-block; /* Ensures the background only wraps around each span */
+    padding: 3px 5px; /* Add some space inside the background */
+    margin: 0 5px; /* Add spacing between hashtags */
+    border-radius: 5px; /* Optional rounded corners */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    margin: 0px;
+}
+
+.menu-item h5 .hashtagC {
+    background-color: #075aa2; /* Light gray background */
+    color: #f0f0f0;
+    display: inline-block; /* Ensures the background only wraps around each span */
+    padding: 3px 5px; /* Add some space inside the background */
+    margin: 0 5px; /* Add spacing between hashtags */
+    border-radius: 5px; /* Optional rounded corners */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    margin: 0px;
+}
+
+.menu-item h5 .hashtagD {
+    background-color: #04345d; /* Light gray background */
+    color: #f0f0f0;
+    display: inline-block; /* Ensures the background only wraps around each span */
+    padding: 3px 5px; /* Add some space inside the background */
+    margin: 0 5px; /* Add spacing between hashtags */
+    border-radius: 5px; /* Optional rounded corners */
+    font-size: 0.9rem; /* Adjust font size if needed */
+    margin: 0px;
 }
 
 .menu-item:hover {
