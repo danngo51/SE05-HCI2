@@ -33,6 +33,25 @@ function addInputField() {
     container.appendChild(newInputContainer);
 }
 
+function addInputFieldwoWarning(button) {
+    const container = button.closest('.option-section').querySelector('.input-list-container');
+
+    // Create a new input container
+    const newInputContainer = document.createElement('div');
+    newInputContainer.classList.add('input-container');
+
+    // Add new input field with a delete button
+    newInputContainer.innerHTML = `
+        <div class="input-wrapper">
+            <input type="text" placeholder="Enter your health concerns." class="health-input">
+            <button type="button" class="delete-button" onclick="deleteInputField(this)">x</button>
+        </div>
+    `;
+
+    // Insert the new input field above the Add button
+    container.appendChild(newInputContainer);
+}
+
 // Function to delete an input field
 function deleteInputField(button) {
     const inputContainer = button.closest('.input-container');

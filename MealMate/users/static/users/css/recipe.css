@@ -1,6 +1,11 @@
+@import url('/static/users/css/base.css');
+
+* {
+    font-family: 'Rimouski';
+}
+
 /* Body 스타일 */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
     background-color: #f9f9f9;
