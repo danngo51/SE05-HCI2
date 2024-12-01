@@ -1,0 +1,13 @@
+{% extends "recipe_base.html" %}
+
+{% block title %}Ingredient List{% endblock %}
+
+{% block content %}
+<h1>Ingredient List</h1>
+<ul>
+    {% for ingredient in ingredients %}
+    <li>{{ ingredient.name }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'ingredient_create' %}">Add New Ingredient</a>
+{% endblock %}

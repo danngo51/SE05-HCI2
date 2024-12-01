@@ -1,0 +1,13 @@
+{% extends "recipe_base.html" %}
+
+{% block title %}Create Ingredient{% endblock %}
+
+{% block content %}
+<h1>Add New Ingredient</h1>
+<form method="post">
+    {% csrf_token %}  <!-- Protects against CSRF attacks -->
+    {{ form.as_p }}   <!-- Renders the form fields -->
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'ingredient_list' %}">Back to Ingredient List</a> <!-- Link to the ingredient list page -->
+{% endblock %}
