@@ -1,0 +1,16 @@
+/* 로컬 폰트 정의 */
+@font-face {
+    font-family: 'Rimouski'; /* 폰트 이름 */
+    /* src: url('/static/fonts/RimouskiLt-Regular.ttf') format('truetype'), */
+         url('/static/fonts/RimouskiRg-Bold.ttf') format('truetype'),
+         url('/static/fonts/RimouskiRg-Regular.ttf') format('truetype'),
+         url('/static/fonts/RimouskiSb-Regular.ttf') format('truetype'),
+         /* url('/static/fonts/RimouskiUl-Regular.ttf') format('truetype'); */
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 기본적으로 body에 폰트 적용 */
+body {
+    font-family: 'Rimouski'; /* 기본 폰트 포함 */
+}
