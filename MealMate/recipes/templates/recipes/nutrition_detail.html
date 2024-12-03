@@ -1,0 +1,23 @@
+<!-- templates/recipes/nutrition_detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Detail</title>
+</head>
+<body>
+    <h1>Nutrition Information for {{ nutrition.recipe.title }}</h1>
+    <ul>
+        <li>Calories: {{ nutrition.calories }}</li>
+        <li>Total Fat: {{ nutrition.total_fat }}</li>
+        <li>Sugar: {{ nutrition.sugar }}</li>
+        <li>Sodium: {{ nutrition.sodium }}</li>
+        <li>Protein: {{ nutrition.protein }}</li>
+        <li>Saturated Fat: {{ nutrition.saturated_fat }}</li>
+        <li>Carbohydrates: {{ nutrition.carbohydrates }}</li>
+    </ul>
+    <a href="{% url 'recipe_detail' pk=nutrition.recipe.pk %}">Back to Recipe</a>
+</body>
+</html>

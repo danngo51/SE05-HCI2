@@ -1,19 +1,50 @@
-{% extends "recipe_base.html" %}
+<!-- templates/recipes/recipe_detail.html -->
 
-{% block title %}{{ recipe.title }}{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.title }}</title>
+</head>
+<body>
+    <h1>{{ recipe.title }}</h1>
+    <p><strong>Description:</strong> {{ recipe.description }}</p>
 
-{% block content %}
-<h1>{{ recipe.title }}</h1>
-{% if recipe.image %}
-<img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="max-width: 300px;">
-{% endif %}
-<p>{{ recipe.description }}</p>
-<h2>Ingredients:</h2>
-<ul>
-    {% for ingredient in recipe.ingredients.all %}
-    <li>{{ ingredient.name }}</li>
-    {% endfor %}
-</ul>
-<h2>Instructions:</h2>
-<p>{{ recipe.instructions }}</p>
-{% endblock %}
+    <p><strong>Tags:</strong></p>
+    <ul>
+        {% for tag in recipe.tags.all %}
+            <li>{{ tag.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Ingredients:</strong></p>
+    <ul>
+        {% for ingredient in recipe.ingredients.all %}
+            <li>{{ ingredient.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Instructions:</strong></p>
+    <ol>
+        {% for step in recipe.instructions %}
+            <li>{{ step }}</li>
+        {% endfor %}
+    </ol>
+
+    {% if nutrition %}
+        <h3>Nutrition</h3>
+        <ul>
+            <li>Calories: {{ nutrition.calories }}</li>
+            <li>Total Fat: {{ nutrition.total_fat }}</li>
+            <li>Sugar: {{ nutrition.sugar }}</li>
+            <li>Sodium: {{ nutrition.sodium }}</li>
+            <li>Protein: {{ nutrition.protein }}</li>
+            <li>Saturated Fat: {{ nutrition.saturated_fat }}</li>
+            <li>Carbohydrates: {{ nutrition.carbohydrates }}</li>
+        </ul>
+    {% endif %}
+
+    <a href="{% url 'recipe_list' %}">Back to Recipe List</a>
+</body>
+</html>
