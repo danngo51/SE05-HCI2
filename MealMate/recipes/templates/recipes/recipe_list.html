@@ -1,14 +1,18 @@
-{% extends "recipe_base.html" %}
+<!-- templates/recipes/recipe_list.html -->
 
-{% block title %}Recipe List{% endblock %}
-
-{% block content %}
-<h1>Recipes</h1>
-<ul>
-    {% for recipe in recipes %}
-    <li>
-        <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.title }}</a>
-    </li>
-    {% endfor %}
-</ul>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe List</title>
+</head>
+<body>
+    <h1>Recipe List</h1>
+    <ul>
+        {% for recipe in recipes %}
+            <li><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

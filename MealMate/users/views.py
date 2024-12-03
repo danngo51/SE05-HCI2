@@ -4,6 +4,9 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 
+# Models 
+from .models import UserProfile
+
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -35,17 +38,66 @@ def history(request):
 
 
 ### PREFERENCES ###
+@login_required
 def health_concerns(request):
-    return render(request, 'users/pref_health_concerns.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        # Get updated health concerns from POST data
+        new_concerns = request.POST.getlist('new[]')
+        existing_concerns = request.POST.getlist('existing[]')
+        
+        # Save updated concerns to the database
+        profile.health_concerns = existing_concerns + new_concerns
+        profile.save()
+        return redirect('budget')  # Redirect to the next page
+
+    # Pass existing health concerns to the template
+    return render(request, 'users/pref_health_concerns.html', {
+        'existing_data': profile.health_concerns or [],  # Existing concerns are locked
+    })
+
 
 def budget(request):
     return render(request, 'users/pref_budget.html')
 
+@login_required
 def diet_preferences(request):
-    return render(request, 'users/pref_diet.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
 
+    if request.method == 'POST':
+        # Get updated health concerns from POST data
+        new_diet = request.POST.getlist('new_diet[]')
+        existing_diet = request.POST.getlist('existing_diet[]')
+        
+        # Save updated concerns to the database
+        profile.diet = existing_diet+ new_diet
+        profile.save()
+        return redirect('dishes')  # Redirect to the next page
+
+    # Pass existing health concerns to the template
+    return render(request, 'users/pref_diet.html', {
+        'existing_diet': profile.diet or [],  # Existing concerns are locked
+    })
+
+@login_required
 def dishes_preferences(request):
-    return render(request, 'users/pref_dishes.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        # Get updated health concerns from POST data
+        new_dishes = request.POST.getlist('new_dishes[]')
+        existing_dishes = request.POST.getlist('existing_dishes[]')
+        
+        # Save updated concerns to the database
+        profile.preferred_cuisines = existing_dishes+ new_dishes
+        profile.save()
+        return redirect('')  # Redirect to the next page
+
+    # Pass existing health concerns to the template
+    return render(request, 'users/pref_dishes.html', {
+        'existing_dishes': profile.preferred_cuisines or [],  # Existing concerns are locked
+    })
 
 def final_page(request):
     return render(request, 'users/pref_done.html')

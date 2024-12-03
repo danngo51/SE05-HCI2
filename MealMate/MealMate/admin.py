@@ -1,10 +1,9 @@
 from django.apps import apps
 from django.contrib import admin
 
-# Automatically register all models across all apps
-for app in apps.get_app_configs():
-    for model_name, model in app.models.items():
-        try:
-            admin.site.register(model)
-        except admin.sites.AlreadyRegistered:
-            pass
+for model in apps.get_models():
+    print(f"Registering model: {model.__name__}")
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        print(f"Model already registered: {model.__name__}")
