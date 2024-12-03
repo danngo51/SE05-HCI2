@@ -7,7 +7,7 @@ def home(request):
 
 # View to display all recipes
 def recipe_list(request):
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.only('title', 'pk')  # Only fetch 'title' and 'pk'
     return render(request, 'recipes/recipe_list.html', {'recipes': recipes})
 
 # View to display a single recipe's details
