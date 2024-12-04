@@ -18,6 +18,9 @@ from .forms import UserRegistrationForm, EmailLoginForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from users.services import generate_user_profile_embedding
+
+from django.http import JsonResponse
 
 # LLM
 import random
@@ -147,7 +150,17 @@ def dishes_preferences(request):
 
 @login_required
 def final_page(request):
+    """
+    Renders the final page with the button and handles button press logic (POST request).
+    """
+    
+    if request.method == 'POST':
+        generate_user_profile_embedding(request)
+        return redirect('main')
+
     return render(request, 'users/pref_done.html')
+    
+
 
 ### MAIN ###
 @login_required

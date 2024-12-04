@@ -1,17 +1,23 @@
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 import openai
-from .models import Embedded_Recipe
 
-def generate_embedding(input_text):
-    response = openai.Embedding.create(
-        model="text-embedding-ada-002",
-        input=input_text
-    )
-    return response['data'][0]['embedding']
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-def filter_recipes_by_preferences(user_profile, excluded_recipe_ids):
-    profile_embedding = user_profile.embedding
-    recipes = Embedded_Recipe.objects.filter(
-        embedding__distance_lte=(profile_embedding, 0.7)
-    ).exclude(id__in=excluded_recipe_ids).order_by("?")[:10]
+# Get the directory of the current script (main.py)
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-    return recipes
+# Construct the full path to the .env file
+dotenv_path = os.path.join(basedir, '.env')
+load_dotenv(dotenv_path=dotenv_path)
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
+openai.api_key = API_KEY
+
+from recipes.models import Ingredient, Embedded_Ingredient, Recipe, Embedded_Recipe, Embedded_Recipe, Embedded_Ingredient
+
+
+

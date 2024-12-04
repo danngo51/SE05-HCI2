@@ -7,8 +7,11 @@
     <h1>You’re all set!</h1>
     <p class="subtitle">Enjoy your recipes.</p>
 
-    <div class="final-navigation">
-        <a href="{% url 'main' %}" class="explore-button">Explore</a>
-    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="explore-button">Explore</button>
+    </form>
 </div>
+
+
 {% endblock %}
