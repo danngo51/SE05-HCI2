@@ -151,8 +151,8 @@ def final_page(request):
 ### MAIN ###
 @login_required
 def main(request):
-    search_query = request.GET.get('query', '').strip()
-    button_clicked = request.GET.get('button', None)
+    # search_query = request.GET.get('query', '').strip()
+    # button_clicked = request.GET.get('button', None)
 
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     ## Get preferences
@@ -163,78 +163,55 @@ def main(request):
         "preferred_dishes": profile.preferred_cuisines,
     }
 
-    meal_data = list(
-        Recipe.objects.values("id", "title", "ingredients", "tags", "instructions")[:1000]
-    )
-    meal_ids = [meal["id"] for meal in meal_data]
-    nutrition_data = list(
-        Nutrition.objects.filter(recipe__in=meal_ids).values(
-            "recipe", "calories", "total_fat", "sugar", "sodium", "protein", "saturated_fat", "carbohydrates"
-        )
-    )
+    meal_data = list(Recipe.objects.all().order_by('id')[:2000])
+    meal_ids = [meal.id for meal in meal_data]
+    nutrition_data = list(Nutrition.objects.filter(recipe__in=meal_ids).all())
     # meal_data = list(Recipe.objects.values("id", "title", "ingredients", "tags"))
     # nutrition_data = list(Nutrition.objects.values("recipe", "calories", "total_fat", "sugar", "sodium", "protein", "saturated_fat", "carbohydrates"))
 
     # Combine data
-    nutrition_map = {n["recipe"]: n for n in nutrition_data}
-    combined_data = []
-    for recipe in meal_data:
-        recipe_id = recipe["id"]
-        if recipe_id in nutrition_map:
-            combined_row = {**recipe, **nutrition_map[recipe_id]}
-            combined_data.append(combined_row)
+    nutrition_map = {nutrition.recipe: nutrition for nutrition in nutrition_data}
+    combined_data = [
+        {
+            "id": meal.id,
+            "title": meal.title,
+            "ingredients": meal.ingredients,
+            "tags": meal.tags,
+            "calories": nutrition_map[meal.id].calories if meal.id in nutrition_map else None,
+            "total_fat": nutrition_map[meal.id].total_fat if meal.id in nutrition_map else None,
+            "sugar": nutrition_map[meal.id].sugar if meal.id in nutrition_map else None,
+            "sodium": nutrition_map[meal.id].sodium if meal.id in nutrition_map else None,
+            "protein": nutrition_map[meal.id].protein if meal.id in nutrition_map else None,
+            "saturated_fat": nutrition_map[meal.id].saturated_fat if meal.id in nutrition_map else None,
+            "carbohydrates": nutrition_map[meal.id].carbohydrates if meal.id in nutrition_map else None,
+        }
+        for meal in meal_data
+    ]
 
     ### SEARCH BAR: FILTERING ###
-    if button_clicked == "filter" and search_query:
-        formatted_prompt = "\n".join(
-            f"title: {item['title']}, ingredients: {item['ingredients']}, tags: {item['tags']}, "
-            f"calories: {item['calories']}, total_fat: {item['total_fat']}, sugar: {item['sugar']}, sodium: {item['sodium']}, "
-            f"protein: {item['protein']}, saturated_fat: {item['saturated_fat']}, carbohydrates: {item['carbohydrates']}, "
-            f"search_query: {search_query}"
-            for item in combined_data
-        )
-
-        # OpenAI API
-        prompt = (
-            f"You are a meal recommender. Suggests meals by referring to the meal information (ingredients, tags, nutritions) to incorporate user preferences (health_concerns, budget, diet, preferred dishes): {preferences}"
-            f"The meals information including their nutritional information (calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates) and search query are:\n{formatted_prompt}"
-            f"Return only matching meal titles (more than 3) as a list."
-            f"All suggested meals must strictly related to search query."
-        )
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You filter meals according to user preferences by referring to the meal information that I give you.\
-                                            Your response should be only the list of meal titles(e.g. [meal title1, meal title2, ... etc]), \
-                                            and the number of meals MUST BE more than 3 without duplication. \
-                                            The provided meal titles must never be altered from the information I gave it to you.\
-                                            Please prioritize filtering in the order of health concerns, budget, and other preferences.\
-                                            All suggested meals must strictly match the search query criteria."},
-                {"role": "user", "content": prompt},
-            ]
-        )
+    # if button_clicked == "filter" and search_query:
     ### DEFAULT ###
-    else:
-        formatted_prompt = "\n".join(
-            f"title: {item['title']}, ingredients: {item['ingredients']}, tags: {item['tags']}, "
-            f"calories: {item['calories']}, total_fat: {item['total_fat']}, sugar: {item['sugar']}, sodium: {item['sodium']}, "
-            f"protein: {item['protein']}, saturated_fat: {item['saturated_fat']}, carbohydrates: {item['carbohydrates']}"
-            for item in combined_data
-        )
+    # else:
+    formatted_prompt = "\n".join(
+        f"title: {item['title']}, ingredients: {item['ingredients']}, tags: {item['tags']}, "
+        f"calories: {item['calories']}, total_fat: {item['total_fat']}, sugar: {item['sugar']}, sodium: {item['sodium']}, "
+        f"protein: {item['protein']}, saturated_fat: {item['saturated_fat']}, carbohydrates: {item['carbohydrates']}"
+        for item in combined_data
+    )
 
-        # OpenAI API
-        prompt = (
-            f"give me 10 random meals: {formatted_prompt}"
-        )
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "give me meals recommendation in this format: [meal title1, meal title2, ...]"},
-                {"role": "user", "content": prompt},
-            ]
-        )
+    # OpenAI API
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are a meal recommender. You pick random meals from the list of meals I gave you based on user preferences by referring to the meal information. \
+                                            Your response should be only the title of 3 meals (e.g. [meal title1, meal title2, ... etc]). \
+                                            The provided meal titles must never be altered from the information I gave it to you.\
+                                            Please prioritize filtering in the order of health concerns, budget, and other preferences."},
+            {"role": "user", "content": (f"Suggests meals by referring to the meal information (ingredients, tags, nutritions) to incorporate user preferences (health_concerns, budget, diet, preferred dishes):\n{preferences}\n"
+                                        f"The meals information including their nutritional information (calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates) are:\n{formatted_prompt}" 
+                                        f"Return only matching meal titles as a list.")},
+        ]
+    )
     print(response.choices)
     meals = [choice.message.content for choice in response.choices][0].strip("[]").split(", ")
     meals_dict = {}
