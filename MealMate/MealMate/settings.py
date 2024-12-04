@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'users',
     'core',
     'recipes',
+    'pgvector.django',
 ]
 
 MIDDLEWARE = [

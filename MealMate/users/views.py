@@ -30,6 +30,7 @@ client = OpenAI(api_key = API_KEY)
 from .models import UserProfile, Budget
 from recipes.models import Recipe, Nutrition
 
+
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)

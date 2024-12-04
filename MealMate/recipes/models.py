@@ -1,4 +1,5 @@
 from django.db import models
+from pgvector.django import VectorField
 
 # Create your models here.
 class Ingredient(models.Model):
@@ -7,12 +8,16 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
     
+class Embedded_Ingredient(models.Model):
+    ingredient = models.CharField(max_length=255, unique=True)
+    embedding = VectorField(dimensions=1536, index=True)
+    
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
-    
+
 
 
 class Recipe(models.Model):
@@ -29,6 +34,11 @@ class Recipe(models.Model):
     def __str__(self):
         return self.title
     
+
+class Embedded_Recipe(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    embedding = VectorField(dimensions=1536, index=True)
+      
 
 class Nutrition(models.Model):
     recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, related_name='nutrition', primary_key=True)  # One-to-One relationship with Recipe

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pgvector.django import VectorField
 
 
 # Create your models here.
@@ -21,7 +22,8 @@ class UserProfile(models.Model):
     health_concerns = models.JSONField(blank=True, default=dict)  
     budget = models.ForeignKey(Budget, null=True, blank=True, on_delete=models.SET_NULL)      # on_delete means that if the budget is deleted from the budget table, the user's budget will be set to NULL
     diet = models.JSONField(blank=True, default=dict)          
-    preferred_cuisines = models.JSONField(blank=True, default=dict)       
+    preferred_cuisines = models.JSONField(blank=True, default=dict)  
+    embedding = VectorField(dimensions=1536, index=True)     
 
     def __str__(self):
         return self.user.username
