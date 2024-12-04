@@ -63,7 +63,22 @@ def budget(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)  # Get the current user's profile
     budgets = Budget.objects.all()  # Fetch all budgets
     selected_budget = profile.budget
+    if request.method == 'POST':
+        # Get the selected budget from POST data
+        selected_budget_id = request.POST.get('budget')
 
+        # Save the selected budget to the user's profile
+        if selected_budget_id:
+            try:
+                selected_budget = Budget.objects.get(id=selected_budget_id)
+                profile.budget = selected_budget
+                profile.save()
+            except Budget.DoesNotExist:
+                # Handle the case where the budget ID is invalid
+                pass
+
+        return redirect('diet')  # Redirect to the next page
+    
     return render(request, 'users/pref_budget.html', {
         'budgets': budgets,
         'selected_budget': selected_budget
@@ -75,17 +90,17 @@ def diet_preferences(request):
 
     if request.method == 'POST':
         # Get updated health concerns from POST data
-        new_diet = request.POST.getlist('new_diet[]')
-        existing_diet = request.POST.getlist('existing_diet[]')
+        new_concerns = request.POST.getlist('new[]')
+        existing_concerns = request.POST.getlist('existing[]')
         
         # Save updated concerns to the database
-        profile.diet = existing_diet+ new_diet
+        profile.diet = existing_concerns + new_concerns
         profile.save()
         return redirect('dishes')  # Redirect to the next page
 
     # Pass existing health concerns to the template
     return render(request, 'users/pref_diet.html', {
-        'existing_diet': profile.diet or [],  # Existing concerns are locked
+        'existing_data': profile.diet or [],  # Existing concerns are locked
     })
 
 @login_required
@@ -94,17 +109,17 @@ def dishes_preferences(request):
 
     if request.method == 'POST':
         # Get updated health concerns from POST data
-        new_dishes = request.POST.getlist('new_dishes[]')
-        existing_dishes = request.POST.getlist('existing_dishes[]')
+        new_concerns = request.POST.getlist('new[]')
+        existing_concerns = request.POST.getlist('existing[]')
         
         # Save updated concerns to the database
-        profile.preferred_cuisines = existing_dishes+ new_dishes
+        profile.preferred_cuisines = existing_concerns + new_concerns
         profile.save()
-        return redirect('')  # Redirect to the next page
+        return redirect('done')  # Redirect to the next page
 
     # Pass existing health concerns to the template
     return render(request, 'users/pref_dishes.html', {
-        'existing_dishes': profile.preferred_cuisines or [],  # Existing concerns are locked
+        'existing_data': profile.preferred_cuisines or [],  # Existing concerns are locked
     })
 
 def final_page(request):

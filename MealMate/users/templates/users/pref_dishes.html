@@ -7,24 +7,33 @@
     <h1>Q. What's your preferences on dishes?</h1>
     <p class="subtitle">Any specific meals or ingredients that you really like</p>
 
-    <!-- Input list container -->
-    <div id="input-list-container" class="input-list-container">
-        <div class="input-container">
-            <input type="text" placeholder="Enter your preferences." class="health-input">
-            <p class="warning-message"></p>
+    <!-- Form for submitting health concerns -->
+    <form method="post" id="dishes-form">
+        {% csrf_token %}
+        <div id="input-list-container" class="input-list-container">
+            <!-- Existing health concerns (locked for editing) -->
+            {% for concern in existing_data %}
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input type="text" name="existing[]" value="{{ concern }}" class="health-input" readonly>
+                    <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-    </div>
 
-    <!-- Add Button -->
-    <button class="add-button" onclick="addInputField()">+ Add</button>
+        <!-- Button to dynamically add a new input -->
+        <button type="button" class="add-button" onclick="addInputField1()">+ Add</button>
 
-    <div class="navigation-buttons">
-        <a href="{% url 'diet' %}" class="back-button">Back</a>
-        <a href="#" class="next-button" data-next-url="{% url 'done' %}" onclick="validateInputs(event)">Next</a>
-        <a href="{% url 'done' %}" class="skip-button">Skip</a>
-    </div>
+        <!-- Navigation buttons -->
+        <div class="navigation-buttons">
+            <a href="{% url 'diet' %}" class="back-button">back</a>
+            <a href="{% url 'done' %}" class="skip-button">Skip</a>
+            <a href="#" class="next-button" onclick="submitForm(event)">Next</a>
+        </div>
+    </form>
 
-    <!-- Page Dots -->
+    <!-- Page dots for navigation -->
     <div class="page-dots">
         <span class="dot"></span>
         <span class="dot"></span>
@@ -34,8 +43,30 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        setActiveDot(3); 
-    });
+    function addInputField1() {
+        const container = document.getElementById('input-list-container');
+        const newInputContainer = document.createElement('div');
+        newInputContainer.classList.add('input-container');
+
+        newInputContainer.innerHTML = `
+            <div class="input-wrapper">
+                <input type="text" name="new[]" placeholder="Enter your preferred dishes." class="health-input">
+                <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+            </div>
+        `;
+
+        container.appendChild(newInputContainer);
+    }
+
+    function deleteInputField(button) {
+        const inputContainer = button.closest('.input-container');
+        inputContainer.remove();
+    }
+
+    function submitForm(event) {
+        event.preventDefault(); // Prevent default anchor behavior
+        const form = document.getElementById('dishes-form');
+        form.submit(); // Submit the form programmatically
+    }
 </script>
 {% endblock %}

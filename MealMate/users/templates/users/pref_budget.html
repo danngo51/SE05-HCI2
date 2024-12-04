@@ -7,7 +7,8 @@
     <h1>Q. What's your budget?</h1>
     <p class="subtitle">For one meal, one person</p>
 
-    <form class="budget-form">
+    <form id="budget-form" method="POST" action="{% url 'budget' %}" class="budget-form">
+        {% csrf_token %}
         {% for budget in budgets %}
         <div class="option">
             <input type="radio" 
@@ -20,15 +21,12 @@
             </label>
         </div>
         {% endfor %}
-        <p class="radio-warning-message">
-            {% if not selected_budget %}Please select a budget.{% endif %}
-        </p>
     </form>
     
-    
     <div class="navigation-buttons">
+        <a href="{% url 'health_concerns' %}" class="back-button">back</a>
         <a href="{% url 'diet' %}" class="skip-button">Skip</a>
-        <a href="#" class="next-button" onclick="submitForm(event)">Next</a>
+        <a href="#" class="next-button" onclick="submitBudget(event)">Next</a>
     </div>
 
 
@@ -42,20 +40,20 @@
 </div>
 
 <script>
-    function submitForm(event) {
-        event.preventDefault();
+    function submitBudget(event) {
+        event.preventDefault();  // Prevent default anchor behavior
 
-        const selectedBudget = document.querySelector('input[name="budget"]:checked');
-        if (!selectedBudget) {
-            alert('Please select a budget.');
+        // Select the form
+        const form = document.getElementById('budget-form');
+
+        if (!form) {
+            console.error('Form not found!');
             return;
         }
 
-        // Example of sending the selected value via an AJAX call or form submission
-        const budgetId = selectedBudget.value;
-        console.log('Selected Budget ID:', budgetId);
-
-        // Redirect or send the data to your backend
+        // Submit the form
+        form.submit();
     }
+
 </script>
 {% endblock %}

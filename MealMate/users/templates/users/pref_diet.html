@@ -27,6 +27,7 @@
 
         <!-- Navigation buttons -->
         <div class="navigation-buttons">
+            <a href="{% url 'budget' %}" class="back-button">back</a>
             <a href="{% url 'dishes' %}" class="skip-button">Skip</a>
             <a href="#" class="next-button" onclick="submitForm(event)">Next</a>
         </div>
@@ -49,7 +50,7 @@
 
         newInputContainer.innerHTML = `
             <div class="input-wrapper">
-                <input type="text" name="new[]" placeholder="Enter your health concerns." class="health-input">
+                <input type="text" name="new[]" placeholder="Enter your diet preferences." class="health-input">
                 <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
             </div>
         `;
@@ -64,7 +65,7 @@
 
     function submitForm(event) {
         event.preventDefault(); // Prevent default anchor behavior
-        const form = document.getElementById('health-concerns-form');
+        const form = document.getElementById('diet-form');
         form.submit(); // Submit the form programmatically
     }
 </script>
