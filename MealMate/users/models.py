@@ -23,9 +23,7 @@ class UserProfile(models.Model):
     budget = models.ForeignKey(Budget, null=True, blank=True, on_delete=models.SET_NULL)      # on_delete means that if the budget is deleted from the budget table, the user's budget will be set to NULL
     diet = models.JSONField(blank=True, default=dict)          
     preferred_cuisines = models.JSONField(blank=True, default=dict)  
-    embedding = VectorField(dimensions=1536, index=True)     
+    embedding = VectorField(dimensions=1536, index=True, null=True, blank=True)  # Vector field for user embedding
 
     def __str__(self):
         return self.user.username
-
-

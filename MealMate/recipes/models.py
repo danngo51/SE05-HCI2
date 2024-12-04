@@ -8,10 +8,6 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
     
-class Embedded_Ingredient(models.Model):
-    ingredient = models.CharField(max_length=255, unique=True)
-    embedding = VectorField(dimensions=1536, index=True)
-    
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -35,11 +31,6 @@ class Recipe(models.Model):
         return self.title
     
 
-class Embedded_Recipe(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    embedding = VectorField(dimensions=1536, index=True)
-      
-
 class Nutrition(models.Model):
     recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, related_name='nutrition', primary_key=True)  # One-to-One relationship with Recipe
     calories = models.FloatField(null=True, blank=True)
@@ -52,3 +43,14 @@ class Nutrition(models.Model):
 
     def __str__(self):
         return f"Nutrition for {self.recipe.title}"
+    
+
+class Embedded_Ingredient(models.Model):
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name="embedded_ingredient")
+    embedding = VectorField(dimensions=1536, index=True)
+
+
+class Embedded_Recipe(models.Model):
+    recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, related_name="embedded_recipe")
+    embedding = VectorField(dimensions=1536, index=True)
+
