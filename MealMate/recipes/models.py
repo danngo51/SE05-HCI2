@@ -19,6 +19,7 @@ class Recipe(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=200)
     tags = models.ManyToManyField(Tag, related_name='recipes')  # Many-to-many with Tag
+    minutes = models.IntegerField(default=0)
     description = models.TextField(blank=True)
     n_ingredients = models.IntegerField(default=0)
     ingredients = models.ManyToManyField(Ingredient, related_name='recipes')  # Many-to-many with Ingredient

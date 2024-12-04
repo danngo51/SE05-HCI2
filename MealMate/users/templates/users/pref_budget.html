@@ -8,40 +8,54 @@
     <p class="subtitle">For one meal, one person</p>
 
     <form class="budget-form">
+        {% for budget in budgets %}
         <div class="option">
-            <input type="radio" id="budget1" name="budget" value="under10">
-            <label for="budget1">- $10</label>
+            <input type="radio" 
+                   id="budget{{ forloop.counter }}" 
+                   name="budget" 
+                   value="{{ budget.id }}" 
+                   {% if selected_budget and budget.id == selected_budget.id %}checked{% endif %}>
+            <label for="budget{{ forloop.counter }}">
+                {{ budget.name }} ({{ budget.min_value }} - {{ budget.max_value }})
+            </label>
         </div>
-        <div class="option">
-            <input type="radio" id="budget2" name="budget" value="10to20">
-            <label for="budget2">$10 - $20</label>
-        </div>
-        <div class="option">
-            <input type="radio" id="budget3" name="budget" value="over20">
-            <label for="budget3">$20 -</label>
-        </div>
-        <!-- Warning message for radio buttons -->
-        <p class="radio-warning-message"></p>
+        {% endfor %}
+        <p class="radio-warning-message">
+            {% if not selected_budget %}Please select a budget.{% endif %}
+        </p>
     </form>
-
+    
+    
     <div class="navigation-buttons">
-        <a href="{% url 'health_concerns' %}" class="back-button">Back</a>
-        <a href="#" class="next-button" data-next-url="{% url 'diet' %}" onclick="validateInputs(event)">Next</a>
         <a href="{% url 'diet' %}" class="skip-button">Skip</a>
+        <a href="#" class="next-button" onclick="submitForm(event)">Next</a>
     </div>
+
 
     <!-- Page Dots -->
     <div class="page-dots">
-        <span class="dot active"></span>
         <span class="dot"></span>
+        <span class="dot active"></span>
         <span class="dot"></span>
         <span class="dot"></span>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        setActiveDot(1); 
-    });
+    function submitForm(event) {
+        event.preventDefault();
+
+        const selectedBudget = document.querySelector('input[name="budget"]:checked');
+        if (!selectedBudget) {
+            alert('Please select a budget.');
+            return;
+        }
+
+        // Example of sending the selected value via an AJAX call or form submission
+        const budgetId = selectedBudget.value;
+        console.log('Selected Budget ID:', budgetId);
+
+        // Redirect or send the data to your backend
+    }
 </script>
 {% endblock %}

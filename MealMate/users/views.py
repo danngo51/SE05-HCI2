@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 # Models 
 from .models import UserProfile
+from .models import Budget
 
 def register(request):
     if request.method == 'POST':
@@ -57,9 +58,16 @@ def health_concerns(request):
         'existing_data': profile.health_concerns or [],  # Existing concerns are locked
     })
 
-
+@login_required
 def budget(request):
-    return render(request, 'users/pref_budget.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Get the current user's profile
+    budgets = Budget.objects.all()  # Fetch all budgets
+    selected_budget = profile.budget
+
+    return render(request, 'users/pref_budget.html', {
+        'budgets': budgets,
+        'selected_budget': selected_budget
+    })
 
 @login_required
 def diet_preferences(request):
