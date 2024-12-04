@@ -11,13 +11,16 @@
 <body>
     <header class="explore-header">
         <div class="logo">
-            <img src="{% static 'core/images/Logo.png' %}" alt="Logo">
+            <a href="{% url 'main' %}">
+                <img src="{% static 'core/images/Logo.png' %}" alt="Logo">
+            </a>
             <h1 class="meal-mate-title">MealMate</h1>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Search, e.g. Indian, pasta, spicy etc.">
-            <button>🔍</button>
-           
+            <form method="get" action="{% url 'main' %}">
+                <input type="text" name="query" placeholder="Search, e.g. Indian, pasta, spicy etc.">
+                <button type="submit" name="button" value="filter">🔍</button>
+            </form>
         </div>
         <div class="user-actions">
             <a href="{% url 'change_options' %}" class="preferences">Preferences</a>
@@ -29,54 +32,27 @@
 
     <main>
         <div class="menu-items">
-            <div class="menu-item">
-                <a href="{% url 'recipe' %}">
-                    <h3>Spaghetti Bolognese</h3>
-                    <h4>Cooking time: 1 hour</h4>
-                    <h5>
-                        <span class="hashtagA">#Test1</span>
-                        <span class="hashtagB">#Test2</span>
-                        <span class="hashtagC">#Test3</span>
-                        <span class="hashtagD">#Test4</span>
-                        <span class="hashtagA">#Test5</span>
-                        <span class="hashtagB">#Test6</span>
-                        <span class="hashtagC">#Test7test</span>
-                        <span class="hashtagD">#Test8</span>
-                    </h5>
-                </a>
-            </div>
-            <div class="menu-item">
-                <a href="{% url 'recipe' %}">
-                    <h3>Sushi</h3>
-                    <h4>Cooking time: 1 hour</h4>
-                    <h5>                      
-                        <span class="hashtagA">#Test1</span>
-                        <span class="hashtagB">#Test2</span>
-                        <span class="hashtagC">#Test3</span>
-                        <span class="hashtagD">#Test4</span>
-                        <span class="hashtagA">#Test5</span>
-                        <span class="hashtagB">#Test6</span>
-                        <span class="hashtagC">#Test7</span>
-                        <span class="hashtagD">#Test8</span>
-                    </h5>
-                </a>
-            </div>
-            <div class="menu-item">
-                    <a href="{% url 'recipe' %}">  
-                    <h3>Bibimbap</h3>
-                    <h4>Cooking time: 2 hour</h4>
-                    <h5>            
-                        <span class="hashtagA">#Test1</span>
-                        <span class="hashtagB">#Test2</span>
-                        <span class="hashtagC">#Test3</span>
-                        <span class="hashtagD">#Test4</span>
-                        <span class="hashtagA">#Test5</span>
-                        <span class="hashtagB">#Test6</span>
-                        <span class="hashtagC">#Test7</span>
-                        <span class="hashtagD">#Test8</span>
-                    </h5>
-                </a>
-            </div>
+            {% for title, meal_info in meals_dict.items %}
+                <div class="menu-item">
+                    <a href="{% url 'recipe' pk=meal_info.0.id %}">
+                        <h3>{{ title }}</h3>
+                        <h4>
+                            Cooking time:
+                            {% if meal_info.0.hours > 0 %}
+                                {{ meal_info.0.hours }} hr
+                            {% endif %}
+                            {{ meal_info.0.remaining_minutes }} min
+                        </h4>
+                        <h5>
+                            {% for tag_info in meal_info %}
+                                <span style="background-color: {{ tag_info.color }}; color: black; padding: 5px 8px; border-radius: 9px; display: inline-block; font-weight: 500;">
+                                    {{ tag_info.tag }}
+                                </span>
+                            {% endfor %}
+                        </h5>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </main>
 </body>

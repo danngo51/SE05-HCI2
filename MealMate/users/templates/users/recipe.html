@@ -9,19 +9,18 @@
 </head>
 <body>
     <div class="recipe-header">
-        <h1>Bibimbap</h1>
+        <h1>{{ recipe.title }}</h1>
         <button class="back-button" onclick="history.back()">Back</button>
     </div>
-
-
 
     <div class="recipe-info">
         <div class="time-servings">
             <div class="time">
+                <span>Description: {{ recipe.description }}</span>
                 <span>Estimated time to cook:</span>
-                <span>45 min</span> 
+                <span>{{ time.0 }} hr {{ time.1 }} min</span> 
             </div>
-            <div class="servings">
+            <!-- <div class="servings">
                 <span>Servings:</span>
                 <select>
                     <option value="1">1</option>
@@ -29,44 +28,59 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                 </select>
-            </div>
+            </div> -->
         </div>
+
+
+        <div class="Nutrition">
+            <table>
+                <tr>
+                    <td colspan="2"><strong>Nutrition Facts</strong></td>
+                </tr>
+                <tr>
+                    <td>Calories:</td>
+                    <td>{{ nutrition.calories }} kcal</td>
+                    <td>Sodium:</td>
+                    <td>{{ nutrition.sodium }} g</td>
+                </tr>
+                <tr>
+                    <td>Sugar:</td>
+                    <td>{{ nutrition.sugar }} g</td>
+                    <td>Protein:</td>
+                    <td>{{ nutrition.protein }} g</td>
+                </tr>
+                <tr>
+                    <td>Total fat:</td>
+                    <td>{{ nutrition.total_fat }} g</td>
+                    <td>Carbohydrates:</td>
+                    <td>{{ nutrition.carbohydrates }} g</td>
+                </tr>
+                <tr>
+                    <td>Saturated fat:</td>
+                    <td>{{ nutrition.saturated_fat }} g</td>
+                </tr>
+            </table>
+        </div>
+
+
     </div>
 
     <div class="recipe-content">
         <div class="ingredients">
             <h2>Ingredients</h2>
-            <p><strong>For the Bibimbap Bowl:</strong></p>
+            <p><strong>For the {{ recipe.title }}:</strong></p>
             <ul>
-                <li>Rice: 2 cups cooked short-grain rice (Korean or sushi rice)</li>
-                <li>Vegetables:</li>
-                <ul>
-                    <li>1 carrot (julienned)</li>
-                    <li>1 zucchini (julienned)</li>
-                    <li>100g spinach</li>
-                    <li>100g bean sprouts</li>
-                    <li>5-6 shiitake mushrooms (sliced)</li>
-                </ul>
-                <li>Proteins (Optional):</li>
-                <ul>
-                    <li>200g beef (sirloin or ground beef)</li>
-                    <li>OR substitute with tofu, mushrooms, or fried egg</li>
-                </ul>
+                {% for ingredient in recipe.ingredients.all %}
+                    <li>{{ ingredient.name }}</li>
+                {% endfor %}
             </ul>
         </div>
         <div class="instructions">
             <h2>Instructions</h2>
             <ol>
-                <li><strong>Cook the Rice:</strong> Rinse the rice several times until the water runs clear. Cook in a rice cooker or on the stovetop according to package instructions. Keep warm.</li>
-                <li><strong>Prepare the Vegetables:</strong>
-                    <ul>
-                        <li>Spinach: Blanch in boiling water for 30 seconds, drain, and season with salt and sesame oil.</li>
-                        <li>Bean Sprouts: Blanch for 2-3 minutes, drain, and season similarly to spinach.</li>
-                        <li>Carrot & Zucchini: Stir-fry with oil and salt for 1-2 minutes each.</li>
-                        <li>Shiitake Mushrooms: Stir-fry with sesame oil until soft.</li>
-                    </ul>
-                </li>
-                <li><strong>Cook the Beef (or Alternative Protein):</strong> Stir-fry beef or tofu with garlic and soy sauce.</li>
+                {% for step in recipe.instructions %}
+                    <li>{{ step }}</li>
+                {% endfor %}
             </ol>
         </div>
     </div>

@@ -15,6 +15,6 @@ urlpatterns = [
     path('preferences/dishes-preferences/', views.dishes_preferences, name='dishes'),
     path('preferences/done/', views.final_page, name='done'),
     path('main/', views.main, name='main'),
-    path('recipe/', views.recipe, name='recipe'),
+    path('recipe/<int:pk>/', views.recipe, name='recipe'),
     path('change-options/', views.change_options, name='change_options'),
 ]

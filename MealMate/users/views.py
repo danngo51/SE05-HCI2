@@ -1,11 +1,34 @@
-from django.shortcuts import render, redirect
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Get the directory of the current script (main.py)
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+# Construct the full path to the .env file
+dotenv_path = os.path.join(basedir, '.env')
+load_dotenv(dotenv_path=dotenv_path)
+load_dotenv()
+
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegistrationForm, EmailLoginForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 
+# LLM
+import random
+from openai import OpenAI
+import json
+API_KEY = os.getenv("API_KEY")
+client = OpenAI(api_key = API_KEY)
+
 # Models 
-from .models import UserProfile
+from .models import UserProfile, Budget
+from recipes.models import Recipe, Nutrition
 
 def register(request):
     if request.method == 'POST':
@@ -57,9 +80,31 @@ def health_concerns(request):
         'existing_data': profile.health_concerns or [],  # Existing concerns are locked
     })
 
-
+@login_required
 def budget(request):
-    return render(request, 'users/pref_budget.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Get the current user's profile
+    budgets = Budget.objects.all()  # Fetch all budgets
+    selected_budget = profile.budget
+    if request.method == 'POST':
+        # Get the selected budget from POST data
+        selected_budget_id = request.POST.get('budget')
+
+        # Save the selected budget to the user's profile
+        if selected_budget_id:
+            try:
+                selected_budget = Budget.objects.get(id=selected_budget_id)
+                profile.budget = selected_budget
+                profile.save()
+            except Budget.DoesNotExist:
+                # Handle the case where the budget ID is invalid
+                pass
+
+        return redirect('diet')  # Redirect to the next page
+    
+    return render(request, 'users/pref_budget.html', {
+        'budgets': budgets,
+        'selected_budget': selected_budget
+    })
 
 @login_required
 def diet_preferences(request):
@@ -67,17 +112,17 @@ def diet_preferences(request):
 
     if request.method == 'POST':
         # Get updated health concerns from POST data
-        new_diet = request.POST.getlist('new_diet[]')
-        existing_diet = request.POST.getlist('existing_diet[]')
+        new_concerns = request.POST.getlist('new[]')
+        existing_concerns = request.POST.getlist('existing[]')
         
         # Save updated concerns to the database
-        profile.diet = existing_diet+ new_diet
+        profile.diet = existing_concerns + new_concerns
         profile.save()
         return redirect('dishes')  # Redirect to the next page
 
     # Pass existing health concerns to the template
     return render(request, 'users/pref_diet.html', {
-        'existing_diet': profile.diet or [],  # Existing concerns are locked
+        'existing_data': profile.diet or [],  # Existing concerns are locked
     })
 
 @login_required
@@ -86,28 +131,142 @@ def dishes_preferences(request):
 
     if request.method == 'POST':
         # Get updated health concerns from POST data
-        new_dishes = request.POST.getlist('new_dishes[]')
-        existing_dishes = request.POST.getlist('existing_dishes[]')
+        new_concerns = request.POST.getlist('new[]')
+        existing_concerns = request.POST.getlist('existing[]')
         
         # Save updated concerns to the database
-        profile.preferred_cuisines = existing_dishes+ new_dishes
+        profile.preferred_cuisines = existing_concerns + new_concerns
         profile.save()
-        return redirect('')  # Redirect to the next page
+        return redirect('done')  # Redirect to the next page
 
     # Pass existing health concerns to the template
     return render(request, 'users/pref_dishes.html', {
-        'existing_dishes': profile.preferred_cuisines or [],  # Existing concerns are locked
+        'existing_data': profile.preferred_cuisines or [],  # Existing concerns are locked
     })
 
+@login_required
 def final_page(request):
     return render(request, 'users/pref_done.html')
 
 ### MAIN ###
+@login_required
 def main(request):
-    return render(request, 'users/main.html')
+    search_query = request.GET.get('query', '').strip()
+    button_clicked = request.GET.get('button', None)
 
-def recipe(request):
-    return render(request, 'users/recipe.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    ## Get preferences
+    preferences = {
+        "health_concerns": profile.health_concerns,
+        "budget": profile.budget,
+        "diet": profile.diet,
+        "preferred_dishes": profile.preferred_cuisines,
+    }
 
+    meal_data = list(
+        Recipe.objects.values("id", "title", "ingredients", "tags", "instructions")[:1000]
+    )
+    meal_ids = [meal["id"] for meal in meal_data]
+    nutrition_data = list(
+        Nutrition.objects.filter(recipe__in=meal_ids).values(
+            "recipe", "calories", "total_fat", "sugar", "sodium", "protein", "saturated_fat", "carbohydrates"
+        )
+    )
+    # meal_data = list(Recipe.objects.values("id", "title", "ingredients", "tags"))
+    # nutrition_data = list(Nutrition.objects.values("recipe", "calories", "total_fat", "sugar", "sodium", "protein", "saturated_fat", "carbohydrates"))
+
+    # Combine data
+    nutrition_map = {n["recipe"]: n for n in nutrition_data}
+    combined_data = []
+    for recipe in meal_data:
+        recipe_id = recipe["id"]
+        if recipe_id in nutrition_map:
+            combined_row = {**recipe, **nutrition_map[recipe_id]}
+            combined_data.append(combined_row)
+
+    ### SEARCH BAR: FILTERING ###
+    if button_clicked == "filter" and search_query:
+        formatted_prompt = "\n".join(
+            f"title: {item['title']}, ingredients: {item['ingredients']}, tags: {item['tags']}, "
+            f"calories: {item['calories']}, total_fat: {item['total_fat']}, sugar: {item['sugar']}, sodium: {item['sodium']}, "
+            f"protein: {item['protein']}, saturated_fat: {item['saturated_fat']}, carbohydrates: {item['carbohydrates']}, "
+            f"search_query: {search_query}"
+            for item in combined_data
+        )
+
+        # OpenAI API
+        prompt = (
+            f"You are a meal recommender. Suggests meals by referring to the meal information (ingredients, tags, nutritions) to incorporate user preferences (health_concerns, budget, diet, preferred dishes): {preferences}"
+            f"The meals information including their nutritional information (calories, total_fat, sugar, sodium, protein, saturated_fat, carbohydrates) and search query are:\n{formatted_prompt}"
+            f"Return only matching meal titles (more than 3) as a list."
+            f"All suggested meals must strictly related to search query."
+        )
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You filter meals according to user preferences by referring to the meal information that I give you.\
+                                            Your response should be only the list of meal titles(e.g. [meal title1, meal title2, ... etc]), \
+                                            and the number of meals MUST BE more than 3 without duplication. \
+                                            The provided meal titles must never be altered from the information I gave it to you.\
+                                            Please prioritize filtering in the order of health concerns, budget, and other preferences.\
+                                            All suggested meals must strictly match the search query criteria."},
+                {"role": "user", "content": prompt},
+            ]
+        )
+    ### DEFAULT ###
+    else:
+        formatted_prompt = "\n".join(
+            f"title: {item['title']}, ingredients: {item['ingredients']}, tags: {item['tags']}, "
+            f"calories: {item['calories']}, total_fat: {item['total_fat']}, sugar: {item['sugar']}, sodium: {item['sodium']}, "
+            f"protein: {item['protein']}, saturated_fat: {item['saturated_fat']}, carbohydrates: {item['carbohydrates']}"
+            for item in combined_data
+        )
+
+        # OpenAI API
+        prompt = (
+            f"give me 10 random meals: {formatted_prompt}"
+        )
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "give me meals recommendation in this format: [meal title1, meal title2, ...]"},
+                {"role": "user", "content": prompt},
+            ]
+        )
+    print(response.choices)
+    meals = [choice.message.content for choice in response.choices][0].strip("[]").split(", ")
+    meals_dict = {}
+    TAG_COLORS = ["#A7C957", "#F2E8DF", "#ffca7d", "#ffdd6c"]
+    TAG_EXCLUDE_LIST = ['time-to-make', 'course', 'main-ingredient', 'cuisine', 'preparation', 'occasion', 'equipment']
+
+    for meal in meals:
+        recipe = Recipe.objects.get(title=meal)
+        recipe_id = recipe.id
+        minutes = recipe.minutes
+        hours = minutes // 60
+        remaining_minutes = minutes % 60 
+        tags = recipe.tags.all()
+        tags_list = [tag.name for tag in tags if tag.name not in TAG_EXCLUDE_LIST]
+        tags_list = random.sample(tags_list, min(10, len(tags_list)))
+        meals_dict[meal] = [recipe_id, hours, remaining_minutes, tags_list]
+
+    meals_dict_with_colors = {}
+    for title, meal_info in meals_dict.items():
+        meals_dict_with_colors[title] = [
+            {"id": meal_info[0], "hours": meal_info[1], "remaining_minutes": meal_info[2], "tag": tag, "color": TAG_COLORS[i % len(TAG_COLORS)]} for i, tag in enumerate(meal_info[3])
+        ]
+
+    return render(request, 'users/main.html', {"meals_dict": meals_dict_with_colors})
+
+@login_required
+def recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    time = [recipe.minutes // 60, recipe.minutes % 60]
+    nutrition = recipe.nutrition if hasattr(recipe, 'nutrition') else None
+    return render(request, 'users/recipe.html', {'recipe': recipe, 'nutrition': nutrition, 'time': time})
+
+@login_required
 def change_options(request):
     return render(request, 'users/change_options.html')

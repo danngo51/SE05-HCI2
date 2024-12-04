@@ -29,26 +29,39 @@ body {
 
 .back-button {
     padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    font-size: 1.2rem;
+    border-radius: 15px;
     cursor: pointer;
     text-decoration: none;
+    background-color: #65CB9B;
+    color: #09393D;
+    border: 3px solid #09393D;
 }
 
 .back-button:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
+    background-color: #ff8e51;
 }
 
+.time {
+    font-size: 18px; /* 기본 폰트 크기 */
+    font-weight: bold; /* 텍스트 강조 */
+}
 
+.time span {
+    font-size: 20px; /* 각 span에 대한 폰트 크기 */
+    color: #333; /* 텍스트 색상 */
+}
 
+.time span:first-child {
+    font-size: 16px; /* 첫 번째 span의 폰트 크기 */
+    color: #555; /* 덜 강조된 색상 */
+}
 
-
-
-
-
+.time span:last-child {
+    font-size: 24px; /* 두 번째 span의 폰트 크기 */
+    color: #000; /* 강조된 색상 */
+}
 
 
 
@@ -124,4 +137,33 @@ body {
 
 .instructions ol li strong {
     color: #333;
+}
+
+.Nutrition table {
+    width: 100%; /* 테이블 너비 */
+    border-collapse: collapse;
+    margin-top: 20px; /* Nutrition 섹션 위 간격 */
+}
+
+.Nutrition td {
+    padding: 8px 10px; /* 셀 내부 여백 */
+    vertical-align: top;
+}
+
+.Nutrition tr:nth-child(odd) {
+    background-color: #f9f9f9; /* 줄 간격 강조 */
+}
+
+.Nutrition td:nth-child(2n+1) {
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.Nutrition td:nth-child(2n) {
+    text-align: right; /* 오른쪽 정렬 */
+}
+
+.Nutrition td[colspan="2"] {
+    text-align: center; /* Nutrition Facts 중앙 정렬 */
+    font-size: 1.2em; /* 글자 크기 키움 */
+    padding: 10px 0;
 }
