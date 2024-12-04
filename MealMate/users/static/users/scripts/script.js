@@ -53,3 +53,53 @@ function deleteInputField(button) {
     const inputContainer = button.closest('.input-container');
     inputContainer.remove();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const saveInfoButton = document.getElementById('save-info-button');
+    const profileInfoForm = document.getElementById('profile-info-form');
+
+    saveInfoButton.addEventListener('click', function () {
+        // Debug: Ensure the button is being clicked
+        console.log('Save button clicked!');
+
+        // Validate form inputs
+        const email = document.getElementById('email').value.trim();
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName = document.getElementById('last-name').value.trim();
+
+        // Debug: Check input values
+        console.log(`Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`);
+
+        if (!email || !firstName || !lastName) {
+            alert('Please fill out all required fields.');
+            return;
+        }
+
+        // Debug: Ensure form is being submitted
+        console.log('Submitting the form...');
+        profileInfoForm.submit();
+    });
+});
+
+
+    // Change Password
+    changePasswordButton.addEventListener('click', function () {
+        // Validate password inputs
+        const password = document.getElementById('password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (!password || !newPassword || !confirmPassword) {
+            alert('Please fill out all password fields.');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert('New passwords do not match.');
+            return;
+        }
+
+        // Submit the password form
+        passwordForm.submit();
+    });
+});

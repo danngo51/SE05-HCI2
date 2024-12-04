@@ -27,7 +27,7 @@
 
         <h3>{{ user.first_name }}</h3> <!-- Dynamically load user's name -->
         <ul class="menu">
-            <li><a href="{% url 'profile_details' %}" class="{% if request.resolver_match.url_name == 'profile_details' %}active{% endif %}">
+            <li><a href="{% url 'profile_preferences' %}" class="{% if request.resolver_match.url_name == 'profile_preferences' %}active{% endif %}">
                     <i class="fas fa-user"></i> Profile details
                 </a></li>
             <li><a href="{% url 'change_options' %}" class="{% if request.resolver_match.url_name == 'change_options' %}active{% endif %}">

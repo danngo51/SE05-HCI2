@@ -3,43 +3,83 @@
 {% block title %}Profile Details{% endblock %}
 
 {% block content %}
-
 <!-- Main Content -->
 <div class="main-content">
     <h2>Account Settings</h2>
 
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="text" id="email" name="email" placeholder="Value">
-    </div>
+    <!-- Form for Name and Email -->
+    <!-- Form for Name and Email -->
+    <form id="profile-info-form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="text" id="email" name="email" value="{{ user.email }}">
+        </div>
 
-    <div class="form-group">
-        <label for="first-name">First name</label>
-        <input type="text" id="first-name" name="first-name" placeholder="Value">
-    </div>
+        <div class="form-group">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" name="first_name" value="{{ user.first_name }}">
+        </div>
 
-    <div class="form-group">
-        <label for="last-name">Last name</label>
-        <input type="text" id="last-name" name="last-name" placeholder="Value">
-    </div>
+        <div class="form-group">
+            <label for="last-name">Last name</label>
+            <input type="text" id="last-name" name="last_name" value="{{ user.last_name }}">
+        </div>
 
-    <h3>Change password</h3>
+        <button type="button" id="save-info-button" class="save-bt1n">Save</button>
+    </form>
 
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Value">
-    </div>
 
-    <div class="form-group">
-        <label for="new-password">New password</label>
-        <input type="password" id="new-password" name="new-password" placeholder="Value">
-    </div>
+    <!-- Change Password Section -->
+    <h3>Change Password</h3>
+    <form id="password-form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Current password">
+        </div>
 
-    <div class="form-group">
-        <label for="confirm-password">Confirm new password</label>
-        <input type="password" id="confirm-password" name="confirm-password" placeholder="Value">
-    </div>
+        <div class="form-group">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" name="new_password" placeholder="New password">
+        </div>
 
-    <button class="save-btn">Save</button>
+        <div class="form-group">
+            <label for="confirm-password">Confirm new password</label>
+            <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm new password">
+        </div>
+
+        <button type="button" id="change-password-button" class="save-btn">Change Password</button>
+    </form>
 </div>
+
+<script>
+    // Function to clear input fields
+    function save(fieldId) {
+        const saveInfoButton = document.getElementById('save-info-button');
+        const profileInfoForm = document.getElementById('profile-info-form');
+
+        saveInfoButton.addEventListener('click', function () {
+            // Debug: Ensure the button is being clicked
+            console.log('Save button clicked!');
+
+            // Validate form inputs
+            const email = document.getElementById('email').value.trim();
+            const firstName = document.getElementById('first-name').value.trim();
+            const lastName = document.getElementById('last-name').value.trim();
+
+            // Debug: Check input values
+            console.log(`Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`);
+
+            if (!email || !firstName || !lastName) {
+                alert('Please fill out all required fields.');
+                return;
+            }
+
+            // Debug: Ensure form is being submitted
+            console.log('Submitting the form...');
+            profileInfoForm.submit();
+        });
+    }
+</script>
 {% endblock %}

@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, EmailLoginForm
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Models 
 from .models import UserProfile
@@ -31,7 +33,37 @@ def profile(request):
 
 @login_required
 def preferences(request):
+    user = request.user
+
+    if request.method == 'POST':
+        # Check which form is submitted
+        if 'email' in request.POST:  # Profile Info Form
+            user.email = request.POST.get('email', user.email)
+            user.first_name = request.POST.get('first_name', user.first_name)
+            user.last_name = request.POST.get('last_name', user.last_name)
+            user.save()
+            messages.success(request, 'Profile details updated successfully.')
+        elif 'password' in request.POST:  # Password Form
+            password = request.POST.get('password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if password and new_password:
+                if user.check_password(password):
+                    if new_password == confirm_password:
+                        user.set_password(new_password)
+                        user.save()
+                        update_session_auth_hash(request, user)  # Keep the user logged in
+                        messages.success(request, 'Password changed successfully.')
+                    else:
+                        messages.error(request, 'New passwords do not match.')
+                else:
+                    messages.error(request, 'Incorrect current password.')
+
+        return redirect('profile_preferences')  # Redirect to the same page after processing
+
     return render(request, 'users/profile_preferences.html')
+
 
 @login_required
 def history(request):
