@@ -47,10 +47,10 @@ class Nutrition(models.Model):
 
 class Embedded_Ingredient(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name="embedded_ingredient")
-    embedding = VectorField(dimensions=1536, index=True)
+    embedding = VectorField(dimensions=1536)
 
 
 class Embedded_Recipe(models.Model):
     recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, related_name="embedded_recipe")
-    embedding = VectorField(dimensions=1536, index=True)
+    embedding = VectorField(dimensions=1536)
 
