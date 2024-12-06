@@ -17,11 +17,11 @@ load_dotenv()
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegistrationForm, EmailLoginForm
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from users.services import generate_user_profile_embedding
+from django.contrib import messages
 
-from django.http import JsonResponse
 
 # LLM
 import random
@@ -42,7 +42,7 @@ def register(request):
             user = form.save(commit=False)
             user.save()
             login(request, user)  # Automatically log in the user after registration
-            return redirect('frontpage')  # Redirect to the front page
+            return redirect('health_concerns')  # Redirect to the health_concerns
     else:
         form = UserRegistrationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -52,9 +52,21 @@ class CustomLoginView(LoginView):
     form_class = EmailLoginForm
     template_name = 'users/login.html'
 
+
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'users/password_change_form.html'
+    success_url = '/profile/'
+
+    def form_valid(self, form):
+        messages.success(self.request, "Your password was successfully changed!")
+        return super().form_valid(form)
+
 @login_required
 def profile(request):
-    return render(request, 'users/profile_details.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    return render(request, 'users/profile_details.html',{'profile': profile})
 
 @login_required
 def preferences(request):

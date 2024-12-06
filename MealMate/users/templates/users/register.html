@@ -14,12 +14,12 @@
         <img id="logo" 
         src="{% static 'core/images/Logo.png' %}" 
         alt="MealMate Logo" 
-        onclick="navigateTo('frontpage')">
+        onclick="NavigateTo('')">
         <h1>MealMate</h1>
     </div>
  <!-- Form Container -->
  <div class="container">
-    <form method="post" class="signup-form">
+    <form method="POST" class="signup-form">
         {% csrf_token %}
         <!-- First Name and Last Name -->
         <div class="input-row">
@@ -67,16 +67,24 @@
         </div>
 
         <!-- Submit Button -->
-        <!-- <button type="submit" class="button">Sign Up</button> -->
-        <a href="{% url 'health_concerns' %}" class="button">Sign Up</a>
+        <button type="submit" class="button">Sign Up</button>
+        
         
     </form>
 </div>
 
 <!-- Footer -->
 <div class="footer">
-    <p>Already have an account? <a href="navigateTo('login')">Log in</a></p>
+    <p>Already have an account? <a onclick="navigateTo('user/login')">Log in</a></p>
     <a href="#" class="go-back" onclick="history.back()">Go back</a>
 </div>
 </body>
 </html>
+
+
+<script>
+    function NavigateTo(path) {
+        const baseUrl = `${window.location.protocol}//${window.location.host}/`;
+        window.location.href = baseUrl + path;
+    }
+</script>

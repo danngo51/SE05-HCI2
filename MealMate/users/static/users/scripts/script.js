@@ -29,6 +29,7 @@ function addInputField() {
     container.appendChild(newInputContainer);
 }
 
+
 function addInputFieldwoWarning(button) {
     const container = button.closest('.option-section').querySelector('.input-list-container');
 

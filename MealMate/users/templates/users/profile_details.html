@@ -3,21 +3,53 @@
 {% block title %}Profile Details{% endblock %}
 
 {% block content %}
-<h2>Profile Details</h2>
-<form method="post">
-    {% csrf_token %}
+
+<!-- Main Content -->
+<div class="main-content">
+    <h2>Account Details</h2>
+
     <div class="form-group">
         <label for="email">Email address</label>
-        <input type="text" id="email" name="email" value="{{ user.email }}" readonly>
+        <p id="email">{{ profile.user.email }}</p>
     </div>
+
     <div class="form-group">
         <label for="first-name">First name</label>
-        <input type="text" id="first-name" name="first_name" value="{{ user.first_name }}">
+        <p id="first-name">{{ profile.user.first_name }}</p>
     </div>
+
     <div class="form-group">
         <label for="last-name">Last name</label>
-        <input type="text" id="last-name" name="last_name" value="{{ user.last_name }}">
+        <p id="last-name">{{ profile.user.last_name }}</p>
     </div>
-    <button class="save-btn" type="submit">Save</button>
-</form>
+
+    <h3>Change Password</h3>
+    <form method="post" action="{% url 'password_change' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="password">Current Password</label>
+            <input type="password" id="password" name="old_password" placeholder="Enter current password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="new-password">New Password</label>
+            <input type="password" id="new-password" name="new_password1" placeholder="Enter new password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password" name="new_password2" placeholder="Confirm new password" required>
+        </div>
+
+        <button class="save-btn" type="submit">Save</button>
+    </form>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</div>
 {% endblock %}

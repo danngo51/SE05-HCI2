@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def frontpage(request):
     if request.user.is_authenticated:
-        return redirect('home')  # Redirect logged-in users to the home page
+        return redirect('user/main')  # Redirect logged-in users to the home page
     return render(request, 'core/frontpage.html')
 
 @login_required
@@ -20,4 +20,4 @@ def home(request):
         #recipes = Recipe.objects.filter(cuisine__in=preferences.preferred_cuisines.split(','))
 
     '''
-    return render(request, 'core/home.html')
+    return render(request, 'user/main.html')

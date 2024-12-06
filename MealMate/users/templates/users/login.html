@@ -13,7 +13,7 @@
         <div class="logo">
             <img src="{% static 'core/images/Logo.png' %}" 
             alt="MealMate Logo" 
-            onclick="NavigateTo('frontpage')">
+            onclick="NavigateTo('')">
             <h1>MealMate</h1>
         </div>
 
@@ -39,7 +39,8 @@
                 <button type="button" class="clear-btn" onclick="clearField('{{ form.password.id_for_label }}')">&times;</button>
             </div>
 
-            <a href="{% url 'main' %}" class="button">Log in</a>
+            <!-- Submit Button -->
+            <button type="submit" class="button">Login</button>
         </form>
 
         <div class="footer">
@@ -51,3 +52,10 @@
     </div>
 </body>
 </html>
+
+<script>
+    function NavigateTo(path) {
+        const baseUrl = `${window.location.protocol}//${window.location.host}/`;
+        window.location.href = baseUrl + path;
+    }
+</script>
