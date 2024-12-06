@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     diet = models.JSONField(blank=True, default=dict)          
     preferred_cuisines = models.JSONField(blank=True, default=dict)  
     embedding = VectorField(dimensions=1536, null=True, blank=True)  # Vector field for user embedding
+    health_concern_embedding = VectorField(dimensions=1536, null=True, blank=True)  # Vector field for health concern embedding
 
     def __str__(self):
         return self.user.username

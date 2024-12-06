@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from recipes.services import get_personalized_recommendations_with_health_concerns
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -165,12 +166,12 @@ def final_page(request):
 ### MAIN ###
 @login_required
 def main(request):
-    # search_query = request.GET.get('query', '').strip()
-    # button_clicked = request.GET.get('button', None)
-
     profile, created = UserProfile.objects.get_or_create(user=request.user)
-    ## Get preferences
-    profile_embedding = profile.profile.em
+    recipes = get_personalized_recommendations_with_health_concerns(profile)
+    for recipe in recipes:
+        print(recipe.id)
+    return render(request, 'users/main.html', {'recipes': recipes})
+
 
 @login_required
 def recipe(request, pk):

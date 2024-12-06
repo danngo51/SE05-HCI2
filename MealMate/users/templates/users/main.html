@@ -32,21 +32,18 @@
 
     <main>
         <div class="menu-items">
-            {% for title, meal_info in meals_dict.items %}
+            {% for recipe in recipes %}
                 <div class="menu-item">
-                    <a href="{% url 'recipe' pk=meal_info.0.id %}">
-                        <h3>{{ title }}</h3>
+                    <a href="{% url 'recipe' pk=recipe.id %}">
+                        <h3>{{ recipe.title }}</h3>
                         <h4>
                             Cooking time:
-                            {% if meal_info.0.hours > 0 %}
-                                {{ meal_info.0.hours }} hr
-                            {% endif %}
-                            {{ meal_info.0.remaining_minutes }} min
+                            {{ recipe.minutes }} min
                         </h4>
                         <h5>
-                            {% for tag_info in meal_info %}
+                            {% for tag in recipe.tags.all %}
                                 <span style="background-color: {{ tag_info.color }}; color: black; padding: 5px 8px; border-radius: 9px; display: inline-block; font-weight: 500;">
-                                    {{ tag_info.tag }}
+                                    {{ tag.name }}
                                 </span>
                             {% endfor %}
                         </h5>

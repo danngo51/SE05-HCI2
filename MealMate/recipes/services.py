@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 from openai import OpenAI
+from pgvector.django import L2Distance, CosineDistance
+import random
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,6 +21,7 @@ API_KEY = os.getenv("API_KEY")
 client = OpenAI(api_key=API_KEY,)
 
 from recipes.models import Ingredient, Embedded_Ingredient, Recipe, Embedded_Recipe, Embedded_Recipe, Embedded_Ingredient
+from django.db.models import Case, When
 
 
 def generate_recipe_embedding(recipe):
@@ -77,36 +80,56 @@ def generate_ingredient_embeddings():
     print(f"Successfully embedded {count} ingredients")
 
 
+# Threshold ranges from 0 to 2
+    # Higher thresholds increase the chance of finding more relevant results, but may also lead to less accurate recommendations.
+    # Lower thresholds decrease the chance of finding more relevant results, but may also lead to more accurate recommendations.
+
+
 # Personalized Recommendations:
-#Fetch recipes most similar to a user’s preferences.
-def recommend_recipes_by_user(user_profile, threshold=0.7, limit=10):
+#Fetch recipes most similar to a user’s preferences. Recommended Threshold: 0.3 - 0.7
+def recommend_recipes_by_user(user_profile, threshold=0.7, limit=50):
     """
     Recommend recipes based on similarity to the user's profile embedding.
 
-    Arguments:
+    Args:
         user_profile (UserProfile): The user's profile with preferences and embedding.
         threshold (float): The similarity threshold.
         limit (int): The number of recipes to return.
 
     Returns:
-        QuerySet: Recommended recipes.
+        QuerySet: Recommended `Recipe` objects.
     """
-    if not user_profile.embedding:
-        return Recipe.objects.order_by("?")[:20]
+    if user_profile.embedding is None:
+        print('helle')
         raise ValueError("User profile does not have an embedding.")
 
-    # Query recipes most similar to the user's embedding
-    recommended_recipes = Embedded_Recipe.objects.filter(
-        embedding__distance_lte=(user_profile.embedding, threshold)
-    ).order_by("embedding__distance")[:limit]
+    # Find recipe IDs based on user preferences
+    recipes_with_distances = Embedded_Recipe.objects.annotate(
+    distance=CosineDistance("embedding", user_profile.embedding)
+    ).filter(
+        distance__lte=threshold
+    ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
 
-    return recommended_recipes
+    # Convert QuerySet to list and calculate weights
+    # Higher ratings are more likely to be returned
+    # Perform weighted random sampling
+    recipe_list = list(recipes_with_distances)
+    weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]
+    sampled_recipes = random.choices(recipe_list, weights=weights, k=limit)
+
+    # Get recipe IDs from the sampled results
+    recipe_ids = [r.recipe_id for r in sampled_recipes]
+
+    # Preserve the order of `recipe_ids` in the final query
+    return Recipe.objects.filter(id__in=recipe_ids).order_by(
+        Case(*[When(id=pk, then=pos) for pos, pk in enumerate(recipe_ids)])
+    )
 
 
 
 #Search-Based Recommendations:
-#Combine search query embeddings with user preferences for enhanced recommendations.
-def search_recipes(query, threshold=0.7, limit=10):
+#Combine search query embeddings with user preferences for enhanced recommendations. Recommended Threshold: 0.2 - 0.5
+def search_recipes(query, threshold=0.5, limit=50):
     """
     Search for recipes based on similarity to a query embedding.
 
@@ -116,52 +139,81 @@ def search_recipes(query, threshold=0.7, limit=10):
         limit (int): The number of recipes to return.
 
     Returns:
-        QuerySet: Recipes matching the search query.
+        QuerySet: Recommended `Recipe` objects.
     """
     # Generate an embedding for the search query
-    response = openai.Embedding.create(
-        model="text-embedding-ada-002",
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
         input=query
     )
-    query_embedding = response['data'][0]['embedding']
+    query_embedding = response.data[0].embedding
 
-    # Query recipes most similar to the query embedding
-    matching_recipes = Embedded_Recipe.objects.filter(
-        embedding__distance_lte=(query_embedding, threshold)
-    ).order_by("embedding__distance")[:limit]
+    # Find recipe IDs based on the query embedding
+    recipes_with_distances = Embedded_Recipe.objects.annotate(
+    distance=CosineDistance("embedding", query_embedding)
+    ).filter(
+        distance__lte=threshold
+    ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
 
-    return matching_recipes
+    # Convert QuerySet to list and calculate weights
+    # Higher ratings are more likely to be returned
+    recipe_list = list(recipes_with_distances)
+    weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]  # Assigning higher weights for closer distances
 
-#Allergy Filtering:
-#Exclude recipes containing ingredients similar to allergens.
-def filter_recipes_by_allergies(allergens, recipe_queryset, threshold=0.7):
+    # Perform weighted random sampling
+    sampled_recipes = random.choices(recipe_list, weights=weights, k=limit)
+
+    # Fetch full Recipe objects
+    recipe_ids = [r.recipe_id for r in sampled_recipes]
+    return Recipe.objects.filter(id__in=recipe_ids)
+
+
+#Heath Concerns:
+#Exclude recipes containing ingredients related to Health Concerns. Recommended Threshold: 0.1 - 0.3
+def filter_recipes_by_health_concerns(user_profile, recipe_queryset, threshold=0.3):
     """
-    Exclude recipes containing ingredients similar to the given allergens.
+    Exclude recipes containing ingredients conflicting with the user's health concerns.
 
     Args:
-        allergens (list): List of allergen names (e.g., ["peanut", "walnut"]).
+        user_profile (UserProfile): The user's profile with precomputed health concern embedding.
         recipe_queryset (QuerySet): Recipes to filter.
         threshold (float): The similarity threshold.
 
     Returns:
-        QuerySet: Filtered recipes.
+        QuerySet: Filtered `Recipe` objects.
     """
-    excluded_ingredients = []
+    if user_profile.health_concern_embedding is None:
+        return recipe_queryset
 
-    for allergen in allergens:
-        # Generate an embedding for the allergen
-        response = openai.Embedding.create(
-            model="text-embedding-ada-002",
-            input=allergen
-        )
-        allergen_embedding = response['data'][0]['embedding']
+    # Find ingredients similar to the user's health concerns
+    similar_ingredients = Embedded_Ingredient.objects.annotate(
+        distance=CosineDistance("embedding", user_profile.health_concern_embedding)
+    ).filter(
+        distance__lte=threshold
+    ).values_list("ingredient_id", flat=True)
 
-        # Find ingredients similar to the allergen
-        similar_ingredients = Embedded_Ingredient.objects.filter(
-            embedding__distance_lte=(allergen_embedding, threshold)
-        ).values_list("ingredient_id", flat=True)
+    # Exclude recipes containing these conflicting ingredients
+    return recipe_queryset.exclude(ingredients__id__in=similar_ingredients)
 
-        excluded_ingredients.extend(similar_ingredients)
 
-    # Exclude recipes containing these ingredients
-    return recipe_queryset.exclude(ingredients__id__in=excluded_ingredients)
+
+def get_personalized_recommendations_with_health_concerns(
+    user_profile, query=None, threshold_user_pref=0.7, threshold_search=0.5, threshold_filter=0.3, limit=50):
+    """
+    Fetch personalized recipe recommendations by generating more recipes initially.
+    """
+    initial_limit = limit*2  # Generate more recipes to ensure enough after filtering
+
+    # Step 1: Get user-preference-based recommendations
+    recipes = recommend_recipes_by_user(user_profile, threshold_user_pref, initial_limit)
+
+    # Step 2: If a search query is provided, refine results
+    if query:
+        search_results = search_recipes(query, threshold_search, initial_limit)
+        recipes = recipes & search_results  # Intersection of both QuerySets
+
+    # Step 3: Apply health concern filtering
+    recipes = filter_recipes_by_health_concerns(user_profile, recipes, threshold_filter)
+
+    # Step 4: Limit the final results
+    return recipes[:limit]

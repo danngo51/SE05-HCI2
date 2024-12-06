@@ -19,13 +19,15 @@ client = OpenAI(api_key=API_KEY,)
 
 from users.models import UserProfile
 
+
 def generate_user_profile_embedding(request):
     """
-    Generate an embedding for a user's profile preferences and store it in the `UserProfile` model.
+    Generate embeddings for a user's profile preferences and health concerns, and store them in the `UserProfile` model.
     """
     try:
         profile, created = UserProfile.objects.get_or_create(user=request.user)
 
+        # Generate user profile embedding
         preferences_text = (
             f"Cuisines: {profile.preferred_cuisines} "
             f"Diet: {profile.diet} "
@@ -36,29 +38,42 @@ def generate_user_profile_embedding(request):
             model="text-embedding-3-small",
             input=preferences_text
         )
-        embedding = response.data[0].embedding
-        profile.embedding = embedding
+        profile_embedding = response.data[0].embedding
+        profile.embedding = profile_embedding
+
+        # Generate health concern embedding if health concerns exist
+        if profile.health_concerns:
+            health_concerns_text = " ".join(profile.health_concerns)
+            response = client.embeddings.create(
+                model="text-embedding-3-small",
+                input=health_concerns_text
+            )
+            health_concern_embedding = response.data[0].embedding
+            profile.health_concern_embedding = health_concern_embedding
+
+        # Save the updated profile
         profile.save()
+
     except Exception as e:
         # Log the error and handle gracefully
-        print(f"Error generating user profile embedding: {str(e)}")
+        print(f"Error generating embeddings for user profile: {str(e)}")
         raise
 
 
 def generate_user_profile_embedding(user):
     """
-    Generate an embedding for a user's profile preferences and store it in the UserProfile model.
+    Generate embeddings for a user's profile preferences and health concerns, and store them in the `UserProfile` model.
 
     Args:
-        user (User): The user instance for whom to generate the embedding.
+        user (User): The user instance for whom to generate the embeddings.
     """
     profile = UserProfile.objects.get(user=user)
 
+    # Generate user profile embedding
     budget_text = (
         f"{profile.budget.min_value}-{profile.budget.max_value}"
         if profile.budget else "No Budget"
     )
-    print(budget_text)
     preferences_text = (
         f"Cuisines: {profile.preferred_cuisines} "
         f"Diet: {profile.diet} "
@@ -69,8 +84,19 @@ def generate_user_profile_embedding(user):
         model="text-embedding-3-small",
         input=preferences_text
     )
-    embedding = response.data[0].embedding
+    profile_embedding = response.data[0].embedding
+    profile.embedding = profile_embedding
 
-    profile.embedding = embedding
+    # Generate health concern embedding if health concerns exist
+    if profile.health_concerns:
+        health_concerns_text = " ".join(profile.health_concerns)
+        response = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=health_concerns_text
+        )
+        health_concern_embedding = response.data[0].embedding
+        profile.health_concern_embedding = health_concern_embedding
+
+    # Save the updated profile
     profile.save()
 
