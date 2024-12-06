@@ -1,5 +1,6 @@
 from django.db import models
 from pgvector.django import VectorField
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Ingredient(models.Model):
@@ -53,4 +54,25 @@ class Embedded_Ingredient(models.Model):
 class Embedded_Recipe(models.Model):
     recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, related_name="embedded_recipe")
     embedding = VectorField(dimensions=1536)
+
+
+class RecipeRating(models.Model):
+    RATING_CHOICES = [
+        (1, '⭐'),
+        (2, '⭐⭐'),
+        (3, '⭐⭐⭐'),
+        (4, '⭐⭐⭐⭐'),
+        (5, '⭐⭐⭐⭐⭐'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    date_rated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'recipe')  # A user can only rate a recipe once
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.recipe.title} as {self.rating}"
 

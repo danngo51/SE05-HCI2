@@ -100,3 +100,72 @@ def generate_user_profile_embedding(user):
     # Save the updated profile
     profile.save()
 
+
+from recipes.models import Recipe, RecipeRating
+from django.db.models import Avg, Count
+
+def handle_rating(user, recipe_id, rating_value=None):
+    """
+    Handles creating, updating, or retrieving a rating.
+
+    Args:
+        user (User): The user submitting the rating.
+        recipe_id (int): The ID of the recipe being rated.
+        rating_value (int, optional): The rating value to submit. If None, retrieves the rating.
+
+    Returns:
+        dict: {
+            'success': bool,
+            'message': str,
+            'rating': RecipeRating or None,
+            'average_rating': float or None,
+            'rating_count': int,
+        }
+    """
+    try:
+        recipe = Recipe.objects.get(id=recipe_id)
+
+        if rating_value is not None:
+            # Create or update the rating
+            rating, created = RecipeRating.objects.update_or_create(
+                user=user,
+                recipe=recipe,
+                defaults={'rating': rating_value}
+            )
+            # Calculate average rating and count of ratings
+            stats = RecipeRating.objects.filter(recipe=recipe).aggregate(
+                avg_rating=Avg('rating'),
+                rating_count=Count('id')
+            )
+            return {
+                'success': True,
+                'message': "Rating submitted successfully!" if created else "Rating updated successfully!",
+                'rating': rating,
+                'average_rating': stats['avg_rating'],
+                'rating_count': stats['rating_count'],
+            }
+
+        # Retrieve existing rating
+        rating = RecipeRating.objects.filter(user=user, recipe=recipe).first()
+        stats = RecipeRating.objects.filter(recipe=recipe).aggregate(
+            avg_rating=Avg('rating'),
+            rating_count=Count('id')
+        )
+        return {
+            'success': True,
+            'message': "Rating retrieved successfully.",
+            'rating': rating,
+            'average_rating': stats['avg_rating'],
+            'rating_count': stats['rating_count'],
+        }
+
+    except Recipe.DoesNotExist:
+        return {
+            'success': False,
+            'message': "Recipe not found.",
+            'rating': None,
+            'average_rating': None,
+            'rating_count': None,
+        }
+
+

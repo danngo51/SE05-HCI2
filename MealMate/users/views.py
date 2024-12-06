@@ -19,7 +19,6 @@ from .forms import UserRegistrationForm, EmailLoginForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
-from users.services import generate_user_profile_embedding
 from django.contrib import messages
 
 
@@ -32,7 +31,7 @@ client = OpenAI(api_key = API_KEY)
 
 # Models 
 from .models import UserProfile, Budget
-from recipes.models import Recipe, Nutrition
+from recipes.models import Recipe, RecipeRating
 
 
 def register(request):
@@ -68,13 +67,14 @@ def profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     return render(request, 'users/profile_details.html',{'profile': profile})
 
-@login_required
-def preferences(request):
-    return render(request, 'users/profile_preferences.html')
 
 @login_required
 def history(request):
-    return render(request, 'users/profile_history.html')
+    user_ratings = RecipeRating.objects.filter(user=request.user).select_related('recipe')
+    context = {
+        'ratings': user_ratings,
+    }
+    return render(request, 'users/profile_history.html', context)
 
 
 ### PREFERENCES ###
@@ -166,9 +166,7 @@ def final_page(request):
     """
     Renders the final page with the button and handles button press logic (POST request).
     """
-    
     if request.method == 'POST':
-        generate_user_profile_embedding(request)
         return redirect('main')
 
     return render(request, 'users/pref_done.html')
@@ -188,7 +186,7 @@ def main(request):
     ### SEARCH BAR: FILTERING ###
     if button_clicked == "filter" and search_query:
         print("Filtering with search query")
-        recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.4)
+        recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.5)
         print(f"Filtered recipes: {recipes}")
     ### DEFAULT ###
     else:
@@ -206,4 +204,97 @@ def recipe(request, pk):
 
 @login_required
 def change_options(request):
-    return render(request, 'users/change_options.html')
+    profile, created = UserProfile.objects.get_or_create(user=request.user)     # Get the current user's profile
+    budgets = Budget.objects.all() 
+
+    if request.method == 'POST':
+        # Handle health concerns
+        new_health_concerns = request.POST.getlist('new_hc[]')
+        existing_health_concerns = request.POST.getlist('existing_hc[]')
+
+        # Handle budget
+        selected_budget_id = request.POST.get('budget')
+
+        # Save the selected budget to the user's profile
+        if selected_budget_id:
+            try:
+                selected_budget = Budget.objects.get(id=selected_budget_id)
+                profile.budget = selected_budget
+                profile.save()
+            except Budget.DoesNotExist:
+                # Handle the case where the budget ID is invalid
+                pass
+
+        # Handle diet styles
+        new_diets = request.POST.getlist('new_diet[]')
+        existing_diets = request.POST.getlist('existing_diet[]')
+
+        # Handle preferences
+        new_dishes = request.POST.getlist('new_dish[]')
+        existing_dishes = request.POST.getlist('existing_dish[]')
+
+        # Update the user's profile
+        profile.health_concerns = existing_health_concerns + new_health_concerns
+        profile.diet = existing_diets + new_diets
+        profile.preferred_cuisines = existing_dishes + new_dishes
+        profile.save()
+
+        return redirect('main')  # Redirect to main page
+
+    return render(request, 'users/change_options.html', {
+        'existing_health_concerns': profile.health_concerns,
+        'budgets': budgets,                     # List of budgets
+        'selected_budget': profile.budget,      # Selected budget
+        'existing_diets': profile.diet,
+        'existing_dishes': profile.preferred_cuisines, 
+    })
+
+@login_required
+def preferences(request):
+
+    return render(request, 'users/profile_preferences.html')
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from recipes.models import Recipe
+from recipes.forms import RecipeRatingForm
+from .services import handle_rating
+
+@login_required
+def recipe_test(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+
+    if request.method == 'POST':
+        form = RecipeRatingForm(request.POST)
+        if form.is_valid():
+            rating_value = form.cleaned_data['rating']
+            result = handle_rating(request.user, recipe.id, rating_value)
+            messages.success(request, result['message'])
+            return redirect('recipe_test', pk=pk)
+    else:
+        # Pre-fill the form if the user has already rated the recipe
+        try:
+            user_rating = RecipeRating.objects.get(user=request.user, recipe=recipe)
+            form = RecipeRatingForm(initial={'rating': user_rating.rating})
+        except RecipeRating.DoesNotExist:
+            form = RecipeRatingForm()
+
+    result = handle_rating(request.user, recipe.id)
+    context = {
+        'recipe': recipe,
+        'form': form,
+        'user_rating': result['rating'],
+        'average_rating': result['average_rating'],
+        'rating_count': result['rating_count'],
+    }
+    return render(request, 'users/recipe_test.html', context)
+
+@login_required
+def profile_ratings(request):
+    user_ratings = RecipeRating.objects.filter(user=request.user).select_related('recipe')
+    context = {
+        'ratings': user_ratings,
+    }
+    return render(request, 'users/profile_ratings.html', context)
+

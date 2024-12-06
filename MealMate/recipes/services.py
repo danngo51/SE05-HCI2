@@ -109,7 +109,7 @@ def recommend_recipes_by_user(user_profile, threshold=0.7, limit=50):
     distance=CosineDistance("embedding", user_profile.embedding)
     ).filter(
         distance__lte=threshold
-    ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
+    ).order_by("distance")[:limit*2] #.values_list("recipe_id", flat=True)
     
     # Convert QuerySet to list and calculate weights
     # Higher ratings are more likely to be returned
@@ -162,7 +162,7 @@ def search_recipes(user_profile, query, threshold=0.5, alpha=0.5, limit=50):
     distance=CosineDistance("embedding", combined_embedding)
     ).filter(
         distance__lte=threshold
-    ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
+    ).order_by("distance")[:limit*2] #.values_list("recipe_id", flat=True)
 
     recipe_list = list(recipes_with_distances)
     weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]
@@ -213,7 +213,7 @@ def get_personalized_recommendations_with_health_concerns(
     """
     Fetch personalized recipe recommendations by generating more recipes initially.
     """
-    initial_limit = limit*2  # Generate more recipes to ensure enough after filtering
+    initial_limit = limit*3  # Generate more recipes to ensure enough after filtering
 
     # Step 1: Get user-preference-based recommendations
     recipes = recommend_recipes_by_user(user_profile, threshold_user_pref, initial_limit)
@@ -225,11 +225,11 @@ def get_personalized_recommendations_with_health_concerns(
     return recipes[:limit]
 
 def get_personalized_recommendations_with_health_concerns_with_search(
-    user_profile, query, threshold_user_pref=0.7, threshold_search=0.5, threshold_filter=0.3, alpha=0.5, limit=50):
+    user_profile, query, threshold_search=0.7, threshold_filter=0.3, alpha=0.5, limit=50):
     """
     Fetch personalized recipe recommendations by generating more recipes initially.
     """
-    initial_limit = limit*2  # Generate more recipes to ensure enough after filtering
+    initial_limit = limit  # Generate more recipes to ensure enough after filtering
 
     # Step 1: Get user-preference-based recommendations + query
     recipes = search_recipes(user_profile, query, threshold_search, alpha, initial_limit)

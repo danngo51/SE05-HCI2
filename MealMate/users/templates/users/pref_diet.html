@@ -7,11 +7,9 @@
     <h1>Q. What's your diet preferences?</h1>
     <p class="subtitle">Specific diets, food restrictions, or ingredients you avoid</p>
 
-    <!-- Form for submitting health concerns -->
     <form method="post" id="diet-form">
         {% csrf_token %}
         <div id="input-list-container" class="input-list-container">
-            <!-- Existing health concerns (locked for editing) -->
             {% for concern in existing_data %}
             <div class="input-container">
                 <div class="input-wrapper">

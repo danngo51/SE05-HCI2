@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Recipe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .rating-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        select {
+            font-size: 16px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rate the Recipe</h1>
+        <h2>{{ recipe.title }}</h2>
+        <p>{{ recipe.description }}</p>
+
+        <!-- Average Rating -->
+        <p>
+            Average Rating: 
+            {% if average_rating %}
+                {{ average_rating|floatformat:1 }} ⭐
+                ({{ rating_count }} {{ rating_count|pluralize:"person has,people have" }} rated)
+            {% else %}
+                No ratings yet.
+            {% endif %}
+        </p>
+
+        <!-- User's Rating -->
+        {% if user_rating %}
+        <p>Your Rating: {{ user_rating.get_rating_display }}</p>
+        {% else %}
+        <p>You have not rated this recipe yet.</p>
+        {% endif %}
+
+        <!-- Rating Form -->
+        <div class="rating-form">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit Rating</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

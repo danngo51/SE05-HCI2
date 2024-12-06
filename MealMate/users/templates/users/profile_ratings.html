@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Ratings</title>
+</head>
+<body>
+    <h1>Your Ratings</h1>
+    {% if ratings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Recipe</th>
+                <th>Rating</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in ratings %}
+            <tr>
+                <td>{{ rating.recipe.title }}</td>
+                <td>{{ rating.get_rating_display }}</td>
+                <td>{{ rating.date_rated|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You have not rated any recipes yet.</p>
+    {% endif %}
+</body>
+</html>

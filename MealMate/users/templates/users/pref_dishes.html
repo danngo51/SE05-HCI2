@@ -7,11 +7,9 @@
     <h1>Q. What's your preferences on dishes?</h1>
     <p class="subtitle">Any specific meals or ingredients that you really like</p>
 
-    <!-- Form for submitting health concerns -->
     <form method="post" id="dishes-form">
         {% csrf_token %}
         <div id="input-list-container" class="input-list-container">
-            <!-- Existing health concerns (locked for editing) -->
             {% for concern in existing_data %}
             <div class="input-container">
                 <div class="input-wrapper">

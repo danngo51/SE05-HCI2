@@ -6,29 +6,29 @@
 <!-- Main Content -->
 <div class="main-content">
     <h2>Dish Rating History</h2>
-    <table id="dishTable" class="display">
-        <thead>
-            <tr>
-                <th>Name of Dish</th>
-                <th>Rating</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
+    <div class="table-container">
+        <table id="dishTable" class="display">
+            <thead>
+                <tr>
+                    <th>Name of Dish</th>
+                    <th>Rating</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rating in ratings %}
+                <tr>
+                    <td>{{ rating.recipe.title }}</td>
+                    <td>{{ rating.get_rating_display }}</td>
+                    <td>{{ rating.date_rated|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">You have not rated any dishes yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
-
-
-
-
-<!--    For rating system:
- <select id="dishRating">
-        <option value="⭐">⭐</option>
-        <option value="⭐⭐">⭐⭐</option>
-        <option value="⭐⭐⭐">⭐⭐⭐</option>
-        <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-        <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-    </select>-->

@@ -168,3 +168,36 @@ body {
      border-radius: 5px;
      cursor: pointer;
  }
+
+ .table-container {
+    max-height: 60vh; /* Set the maximum height to 60% of the viewport height */
+    overflow-y: auto; /* Add vertical scrolling if content exceeds container height */
+    margin: 20px 0; /* Add space around the table */
+    border: 1px solid #ddd; /* Visible border for the table container */
+    border-radius: 8px; /* Slight rounding for a modern look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for visibility */
+}
+
+table {
+    width: 100%; /* Take up full width of the container */
+    border-collapse: collapse; /* Remove space between table borders */
+}
+
+th, td {
+    padding: 10px; /* Add padding inside cells */
+    text-align: left; /* Align text to the left */
+    border: 1px solid #ddd; /* Add borders to table cells */
+}
+
+th {
+    background-color: #f4f4f4; /* Light gray background for header */
+    font-weight: bold; /* Bold text for header */
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray background for alternate rows */
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
