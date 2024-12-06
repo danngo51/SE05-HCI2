@@ -4,6 +4,7 @@ from pathlib import Path
 from openai import OpenAI
 from pgvector.django import L2Distance, CosineDistance
 import random
+import numpy as np
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -109,14 +110,14 @@ def recommend_recipes_by_user(user_profile, threshold=0.7, limit=50):
     ).filter(
         distance__lte=threshold
     ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
-
+    
     # Convert QuerySet to list and calculate weights
     # Higher ratings are more likely to be returned
     # Perform weighted random sampling
     recipe_list = list(recipes_with_distances)
     weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]
     sampled_recipes = random.choices(recipe_list, weights=weights, k=limit)
-
+    
     # Get recipe IDs from the sampled results
     recipe_ids = [r.recipe_id for r in sampled_recipes]
 
@@ -129,7 +130,7 @@ def recommend_recipes_by_user(user_profile, threshold=0.7, limit=50):
 
 #Search-Based Recommendations:
 #Combine search query embeddings with user preferences for enhanced recommendations. Recommended Threshold: 0.2 - 0.5
-def search_recipes(query, threshold=0.5, limit=50):
+def search_recipes(user_profile, query, threshold=0.5, alpha=0.5, limit=50):
     """
     Search for recipes based on similarity to a query embedding.
 
@@ -141,30 +142,40 @@ def search_recipes(query, threshold=0.5, limit=50):
     Returns:
         QuerySet: Recommended `Recipe` objects.
     """
+    if user_profile.embedding is None:
+        print('helle')
+        raise ValueError("User profile does not have an embedding.")
+
     # Generate an embedding for the search query
     response = client.embeddings.create(
         model="text-embedding-3-small",
         input=query
     )
     query_embedding = response.data[0].embedding
+    
+    # Calculate a weighted average of the user's preferences and the query embedding
+    combined_embedding = (alpha * np.array(user_profile.embedding)) + ((1 - alpha) * np.array(query_embedding))
+
 
     # Find recipe IDs based on the query embedding
     recipes_with_distances = Embedded_Recipe.objects.annotate(
-    distance=CosineDistance("embedding", query_embedding)
+    distance=CosineDistance("embedding", combined_embedding)
     ).filter(
         distance__lte=threshold
     ).order_by("distance")[:limit*3] #.values_list("recipe_id", flat=True)
 
-    # Convert QuerySet to list and calculate weights
-    # Higher ratings are more likely to be returned
     recipe_list = list(recipes_with_distances)
-    weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]  # Assigning higher weights for closer distances
+    weights = [1 / (recipe.distance + 1e-6) for recipe in recipe_list]
 
-    # Perform weighted random sampling
+    if len(recipe_list) == 0:
+        return Recipe.objects.none()
+
     sampled_recipes = random.choices(recipe_list, weights=weights, k=limit)
 
-    # Fetch full Recipe objects
+    # Get recipe IDs from the sampled results
     recipe_ids = [r.recipe_id for r in sampled_recipes]
+
+
     return Recipe.objects.filter(id__in=recipe_ids)
 
 
@@ -198,7 +209,7 @@ def filter_recipes_by_health_concerns(user_profile, recipe_queryset, threshold=0
 
 
 def get_personalized_recommendations_with_health_concerns(
-    user_profile, query=None, threshold_user_pref=0.7, threshold_search=0.5, threshold_filter=0.3, limit=50):
+    user_profile, threshold_user_pref=0.7, threshold_filter=0.3, limit=50):
     """
     Fetch personalized recipe recommendations by generating more recipes initially.
     """
@@ -207,10 +218,23 @@ def get_personalized_recommendations_with_health_concerns(
     # Step 1: Get user-preference-based recommendations
     recipes = recommend_recipes_by_user(user_profile, threshold_user_pref, initial_limit)
 
-    # Step 2: If a search query is provided, refine results
-    if query:
-        search_results = search_recipes(query, threshold_search, initial_limit)
-        recipes = recipes & search_results  # Intersection of both QuerySets
+    # Step 3: Apply health concern filtering
+    recipes = filter_recipes_by_health_concerns(user_profile, recipes, threshold_filter)
+
+    # Step 4: Limit the final result
+    return recipes[:limit]
+
+def get_personalized_recommendations_with_health_concerns_with_search(
+    user_profile, query, threshold_user_pref=0.7, threshold_search=0.5, threshold_filter=0.3, alpha=0.5, limit=50):
+    """
+    Fetch personalized recipe recommendations by generating more recipes initially.
+    """
+    initial_limit = limit*2  # Generate more recipes to ensure enough after filtering
+
+    # Step 1: Get user-preference-based recommendations + query
+    recipes = search_recipes(user_profile, query, threshold_search, alpha, initial_limit)
+    if len(recipes) == 0:
+        return recipes
 
     # Step 3: Apply health concern filtering
     recipes = filter_recipes_by_health_concerns(user_profile, recipes, threshold_filter)

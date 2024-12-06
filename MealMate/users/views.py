@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from recipes.services import get_personalized_recommendations_with_health_concerns
+from recipes.services import get_personalized_recommendations_with_health_concerns, get_personalized_recommendations_with_health_concerns_with_search
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -166,11 +166,23 @@ def final_page(request):
 ### MAIN ###
 @login_required
 def main(request):
+    # Get the search query and button click from the GET request
+    search_query = request.GET.get('query', '').strip()
+    button_clicked = request.GET.get('button', None)
+
+    # Get user profile
     profile, created = UserProfile.objects.get_or_create(user=request.user)
-    recipes = get_personalized_recommendations_with_health_concerns(profile)
-    for recipe in recipes:
-        print(recipe.id)
-    return render(request, 'users/main.html', {'recipes': recipes})
+
+    ### SEARCH BAR: FILTERING ###
+    if button_clicked == "filter" and search_query:
+        print("Filtering with search query")
+        recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.4)
+        print(f"Filtered recipes: {recipes}")
+    ### DEFAULT ###
+    else:
+        recipes = get_personalized_recommendations_with_health_concerns(profile)
+
+    return render(request, 'users/main.html', {'recipes': recipes, 'search_query': search_query})
 
 
 @login_required

@@ -15,15 +15,14 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="header">
-            <img src="{% static 'core/images/Logo.png' %}" 
-            alt="MealMate Logo"
-            class="header-logo"
-            onclick="navigateTo('{% url 'main' %}')">
+            <a href="{% url 'main' %}">
+                <img src="{% static 'core/images/Logo.png' %}" 
+                     alt="MealMate Logo"
+                     class="header-logo">
+            </a>        
         </div>
 
         <!-- Round picture -->
-        <img src="https://via.placeholder.com/100" alt="Round picture" class="round-image"
-            onclick="navigateTo('profile')">
 
         <h3>{{ user.first_name }}</h3> <!-- Dynamically load user's name -->
         <ul class="menu">

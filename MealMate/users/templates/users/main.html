@@ -18,7 +18,11 @@
         </div>
         <div class="search-bar">
             <form method="get" action="{% url 'main' %}">
-                <input type="text" name="query" placeholder="Search, e.g. Indian, pasta, spicy etc.">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Search, e.g. Indian, pasta, spicy etc." 
+                    value="{{ search_query|default:'' }}">
                 <button type="submit" name="button" value="filter">🔍</button>
             </form>
         </div>
@@ -32,24 +36,28 @@
 
     <main>
         <div class="menu-items">
-            {% for recipe in recipes %}
-                <div class="menu-item">
-                    <a href="{% url 'recipe' pk=recipe.id %}">
-                        <h3>{{ recipe.title }}</h3>
-                        <h4>
-                            Cooking time:
-                            {{ recipe.minutes }} min
-                        </h4>
-                        <h5>
-                            {% for tag in recipe.tags.all %}
-                                <span style="background-color: {{ tag_info.color }}; color: black; padding: 5px 8px; border-radius: 9px; display: inline-block; font-weight: 500;">
-                                    {{ tag.name }}
-                                </span>
-                            {% endfor %}
-                        </h5>
-                    </a>
-                </div>
-            {% endfor %}
+            {% if recipes|length == 0 %}
+                <h2>No recipes found.</h2>
+            {% else %}
+                {% for recipe in recipes %}
+                    <div class="menu-item">
+                        <a href="{% url 'recipe' pk=recipe.id %}">
+                            <h3>{{ recipe.title }}</h3>
+                            <h4>
+                                Cooking time:
+                                {{ recipe.minutes }} min
+                            </h4>
+                            <h5>
+                                {% for tag in recipe.tags.all %}
+                                    <span style="background-color: {{ tag_info.color }}; color: black; padding: 5px 8px; border-radius: 9px; display: inline-block; font-weight: 500;">
+                                        {{ tag.name }}
+                                    </span>
+                                {% endfor %}
+                            </h5>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </main>
 </body>
