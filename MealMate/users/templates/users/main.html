@@ -6,6 +6,7 @@
     <title>Explore Recipes</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'users/css/main.css' %}">
+    {% load time_filters %}
 
 </head>
 <body>
@@ -27,9 +28,9 @@
             </form>
         </div>
         <div class="user-actions">
-            <a href="{% url 'change_options' %}" class="preferences">Preferences</a>
+            <a href="{% url 'change_options' %}" class="preferences">My Preferences</a>
             <button class="profile-button" onclick="window.location.href='{% url 'profile_details' %}'">
-                <img src="{% static 'core/images/Logo.png' %}" alt="User Profile">
+                <img src="{% static 'core/images/user.png' %}" alt="User Profile">
             </button>
         </div>
     </header>
@@ -45,13 +46,13 @@
                             <h3>{{ recipe.title }}</h3>
                             <h4>
                                 Cooking time:
-                                {{ recipe.minutes }} min
-                            </h4>
-                            <h5>
+                                <span>{{ recipe.minutes|format_time }}</span>
+                            </h4>                            
+                            <h5 class="tags-container">
                                 {% for tag in recipe.tags.all %}
-                                    <span style="background-color: {{ tag_info.color }}; color: black; padding: 5px 8px; border-radius: 9px; display: inline-block; font-weight: 500;">
-                                        {{ tag.name }}
-                                    </span>
+                                    {% if tag.name not in 'time-to-make,course,main-ingredient,cuisine,preparation,occasion,equipment' %}
+                                        <span class="tag">{{ tag.name }}</span>
+                                    {% endif %}
                                 {% endfor %}
                             </h5>
                         </a>

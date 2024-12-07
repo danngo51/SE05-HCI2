@@ -30,9 +30,10 @@ body {
 .back-button {
     padding: 10px 20px;
     font-size: 1.2rem;
-    border-radius: 15px;
+    border-radius: 20px;
     cursor: pointer;
     text-decoration: none;
+    font-weight: bold;
     background-color: #65CB9B;
     color: #09393D;
     border: 3px solid #09393D;
@@ -72,16 +73,41 @@ body {
     padding: 15px;
     border-radius: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* 좌우 나눔 */
+    gap: 20px; /* 좌우 칸 사이 여백 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.recipe-info .time, .recipe-info .servings {
+/* 왼쪽 단 */
+.left-column {
+    flex: 2; /* 비율 설정 */
+}
+
+.left-column .description,
+.left-column .time-servings {
+    margin-bottom: 20px;
+}
+
+/* 오른쪽 단 */
+.right-column {
+    flex: 1; /* 오른쪽 비율 */
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-end; /* 오른쪽 정렬 */
+    gap: 20px;
+}
+
+.recipe-info .description {
+    margin-bottom: 20px;
     font-size: 1rem;
+    color: #555;
+}
+
+.recipe-info .time, .recipe-info .servings {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
 }
 
 .recipe-info input[type="text"] {
@@ -106,6 +132,30 @@ body {
     justify-content: space-between;
     margin-top: 20px;
     gap: 20px;
+}
+
+/* Rating Button */
+.rating-button-container {
+    width: 100%; /* 필요한 경우 너비 설정 */
+    text-align: right;
+}
+
+.rating-button {
+    display: inline-block;
+    background-color: #FF8C42;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.rating-button:hover {
+    background-color: #FF6A00;
+    color: #fff;
 }
 
 .ingredients, .instructions {
@@ -137,6 +187,11 @@ body {
 
 .instructions ol li strong {
     color: #333;
+}
+
+/* Nutrition Facts */
+.Nutrition {
+    width: 100%; /* 테이블을 부모에 맞춤 */
 }
 
 .Nutrition table {

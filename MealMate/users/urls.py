@@ -22,6 +22,6 @@ urlpatterns = [
     path('recipe/<int:pk>/', views.recipe, name='recipe'),
     path('change-options/', views.change_options, name='change_options'),
     
-    path('recipes/<int:pk>/test', views.recipe_test, name='recipe_test'),
+    path('recipe/<int:pk>/rating', views.recipe_rating, name='recipe_rating'),
     path('profile/ratings/', views.profile_ratings, name='profile_ratings'),
 ]

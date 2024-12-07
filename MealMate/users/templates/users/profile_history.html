@@ -5,12 +5,12 @@
 {% block content %}
 <!-- Main Content -->
 <div class="main-content">
-    <h2>Dish Rating History</h2>
+    <h2>Meal Rating History</h2>
     <div class="table-container">
         <table id="dishTable" class="display">
             <thead>
                 <tr>
-                    <th>Name of Dish</th>
+                    <th>Name of Meal</th>
                     <th>Rating</th>
                     <th>Date</th>
                 </tr>
@@ -18,13 +18,17 @@
             <tbody>
                 {% for rating in ratings %}
                 <tr>
-                    <td>{{ rating.recipe.title }}</td>
+                    <td>
+                        <a href="{% url 'recipe' pk=rating.recipe.id %}">
+                            {{ rating.recipe.title }}
+                        </a>
+                    </td>
                     <td>{{ rating.get_rating_display }}</td>
                     <td>{{ rating.date_rated|date:"Y-m-d H:i" }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">You have not rated any dishes yet.</td>
+                    <td colspan="3">You have not rated any meals yet.</td>
                 </tr>
                 {% endfor %}
             </tbody>

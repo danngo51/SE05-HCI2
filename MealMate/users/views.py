@@ -186,13 +186,14 @@ def main(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
 
     ### SEARCH BAR: FILTERING ###
+    limit = 10
     if button_clicked == "filter" and search_query:
         print("Filtering with search query")
-        recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.5)
+        recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.5, limit=limit)
         print(f"Filtered recipes: {recipes}")
     ### DEFAULT ###
     else:
-        recipes = get_personalized_recommendations_with_health_concerns(profile)
+        recipes = get_personalized_recommendations_with_health_concerns(profile, limit=limit)
 
     return render(request, 'users/main.html', {'recipes': recipes, 'search_query': search_query})
 
@@ -265,7 +266,7 @@ from recipes.forms import RecipeRatingForm
 from .services import handle_rating
 
 @login_required
-def recipe_test(request, pk):
+def recipe_rating(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
 
     if request.method == 'POST':
@@ -274,7 +275,7 @@ def recipe_test(request, pk):
             rating_value = form.cleaned_data['rating']
             result = handle_rating(request.user, recipe.id, rating_value)
             messages.success(request, result['message'])
-            return redirect('recipe_test', pk=pk)
+            return redirect('recipe', pk=pk)
     else:
         # Pre-fill the form if the user has already rated the recipe
         try:
@@ -291,7 +292,7 @@ def recipe_test(request, pk):
         'average_rating': result['average_rating'],
         'rating_count': result['rating_count'],
     }
-    return render(request, 'users/recipe_test.html', context)
+    return render(request, 'users/recipe_rating.html', context)
 
 @login_required
 def profile_ratings(request):

@@ -10,62 +10,76 @@
 <body>
     <div class="recipe-header">
         <h1>{{ recipe.title }}</h1>
-        <button class="back-button" onclick="history.back()">Back</button>
+
+        <div>
+            <a href="{% url 'main' %}" class="back-button">Back</a>
+        </div>
     </div>
 
     <div class="recipe-info">
-        <div class="time-servings">
-            <div class="time">
-                <span>Description: {{ recipe.description }}</span>
-                <span>Estimated time to cook:</span>
-                <span>{{ time.0 }} hr {{ time.1 }} min</span> 
+        <!-- 왼쪽 단 -->
+        <div class="left-column">
+            <!-- Description -->
+            <div class="description">
+                <p>Description: {{ recipe.description }}</p>
             </div>
-            <!-- <div class="servings">
-                <span>Servings:</span>
-                <select>
-                    <option value="1">1</option>
-                    <option value="2" selected>2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
-            </div> -->
+    
+            <!-- Estimated Time -->
+            <div class="time-servings">
+                <div class="time">
+                    {% if time.0 > 0 %}
+                        <span>Estimated time to cook:</span>
+                        <span>{{ time.0 }} hr {{ time.1 }} min</span>
+                    {% else %}
+                        <span>Estimated time to cook:</span>
+                        <span>{{ time.1 }} min</span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
-
-        <div class="Nutrition">
-            <table>
-                <tr>
-                    <td colspan="2"><strong>Nutrition Facts</strong></td>
-                </tr>
-                <tr>
-                    <td>Calories:</td>
-                    <td>{{ nutrition.calories }} kcal</td>
-                    <td>Sodium:</td>
-                    <td>{{ nutrition.sodium }} g</td>
-                </tr>
-                <tr>
-                    <td>Sugar:</td>
-                    <td>{{ nutrition.sugar }} g</td>
-                    <td>Protein:</td>
-                    <td>{{ nutrition.protein }} g</td>
-                </tr>
-                <tr>
-                    <td>Total fat:</td>
-                    <td>{{ nutrition.total_fat }} g</td>
-                    <td>Carbohydrates:</td>
-                    <td>{{ nutrition.carbohydrates }} g</td>
-                </tr>
-                <tr>
-                    <td>Saturated fat:</td>
-                    <td>{{ nutrition.saturated_fat }} g</td>
-                </tr>
-            </table>
+    
+        <!-- 오른쪽 단 -->
+        <div class="right-column">
+            <!-- Rating Button -->
+            <div class="rating-button-container">
+                <a href="{% url 'recipe_rating' pk=recipe.id %}" class="rating-button">Rate this Recipe</a>
+            </div>
+    
+            <!-- Nutrition Facts -->
+            <div class="Nutrition">
+                <table>
+                    <tr>
+                        <td colspan="2"><strong>Nutrition Facts</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Calories:</td>
+                        <td>{{ nutrition.calories }} kcal</td>
+                        <td>Sodium:</td>
+                        <td>{{ nutrition.sodium }} g</td>
+                    </tr>
+                    <tr>
+                        <td>Sugar:</td>
+                        <td>{{ nutrition.sugar }} g</td>
+                        <td>Protein:</td>
+                        <td>{{ nutrition.protein }} g</td>
+                    </tr>
+                    <tr>
+                        <td>Total fat:</td>
+                        <td>{{ nutrition.total_fat }} g</td>
+                        <td>Carbohydrates:</td>
+                        <td>{{ nutrition.carbohydrates }} g</td>
+                    </tr>
+                    <tr>
+                        <td>Saturated fat:</td>
+                        <td>{{ nutrition.saturated_fat }} g</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-
-
     </div>
 
     <div class="recipe-content">
+        <!-- Ingredients Section -->
         <div class="ingredients">
             <h2>Ingredients</h2>
             <p><strong>For the {{ recipe.title }}:</strong></p>
@@ -75,6 +89,8 @@
                 {% endfor %}
             </ul>
         </div>
+
+        <!-- Instructions Section -->
         <div class="instructions">
             <h2>Instructions</h2>
             <ol>
