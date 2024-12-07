@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 from recipes.services import get_personalized_recommendations_with_health_concerns, get_personalized_recommendations_with_health_concerns_with_search
-
+from users.services import generate_user_profile_embedding
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -166,7 +166,9 @@ def final_page(request):
     """
     Renders the final page with the button and handles button press logic (POST request).
     """
+    user = request.user
     if request.method == 'POST':
+        generate_user_profile_embedding(user)
         return redirect('main')
 
     return render(request, 'users/pref_done.html')
@@ -239,6 +241,7 @@ def change_options(request):
         profile.preferred_cuisines = existing_dishes + new_dishes
         profile.save()
 
+        generate_user_profile_embedding(user = profile.user)
         return redirect('main')  # Redirect to main page
 
     return render(request, 'users/change_options.html', {
