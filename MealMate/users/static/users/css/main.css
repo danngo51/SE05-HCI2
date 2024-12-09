@@ -44,7 +44,7 @@ body {
     align-items: center;
     justify-content: center; 
     margin: 18px auto; 
-    margin-bottom: 80px;   
+    margin-bottom: 25px;   
     width: fit-content; 
 }
 
@@ -62,18 +62,49 @@ body {
 }
 
 .search-bar button {
-    padding: 10px 20px;
+    padding: 8px 20px;
     font-size: 1rem;
-    background-color: #ff8c42;
-    color: white;
+    background-color: #65CB9D;
+    color: #09393D;
     border: none;
     border-radius: 0 12px 12px 0;
     cursor: pointer;
 }
 
 .search-bar button .button-image {
-    width: 19px; /* 이미지 크기 조정 */
-    height: 19px;
+    width: 20px; /* 이미지 크기 조정 */
+    height: 20px;
+}
+
+.reload-button-container {
+    display: flex;
+    justify-content: center; /* 버튼을 중앙 정렬 */
+    margin-top: 20px; /* 검색창과의 간격 */
+}
+
+.reload-button {
+    display: flex; /* 이미지와 텍스트를 나란히 배치 */
+    align-items: center; /* 세로 정렬 */
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff8c42; /* 버튼 배경색 */
+    border-radius: 25px; /* 둥근 모양 */
+    cursor: pointer;
+    color: white; /* 텍스트 색상 */
+    font-size: 1rem; /* 텍스트 크기 */
+    margin-bottom: 60px;
+}
+
+.reload-button .button-image {
+    width: 26px; /* 이미지 너비 */
+    height: 26px; /* 이미지 높이 */
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+.reload-button .button-text {
+    font-family: 'Rimouski';
+    font-weight: 600;
+    font-size: 1.2rem;
 }
 
 /* 사용자 작업 (Preferences & 프로필) */
@@ -337,4 +368,3 @@ a {
 }
 #content {
     display: none; /* 처음에는 숨김 */
-}

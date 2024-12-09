@@ -44,6 +44,13 @@
             </form>
         </div>
 
+        <div class="reload-button-container">
+            <button class="reload-button" onclick="reloadPage()">
+                <img src="{% static 'core/images/reload.png' %}" alt="Reload" class="button-image">
+                <span class="button-text">Refresh Suggestions</span>
+            </button>
+        </div>
+
         <div class="menu-items">
             {% if recipes|length == 0 %}
                 <h2>No meals found.</h2>
@@ -71,4 +78,10 @@
     </main>
 
 </body>
+
+<script>
+    function reloadPage() {
+        window.location.reload();
+    }
+</script>
 </html>
