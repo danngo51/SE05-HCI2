@@ -26,7 +26,6 @@
                 {% if form.username.errors %}
                     <div class="error">{{ form.username.errors }}</div>
                 {% endif %}
-                <button type="button" class="clear-btn" onclick="clearField('{{ form.username.id_for_label }}')">&times;</button>
             </div>
 
             <!-- Password -->
@@ -36,7 +35,6 @@
                 {% if form.password.errors %}
                     <div class="error">{{ form.password.errors }}</div>
                 {% endif %}
-                <button type="button" class="clear-btn" onclick="clearField('{{ form.password.id_for_label }}')">&times;</button>
             </div>
 
             <!-- Submit Button -->
