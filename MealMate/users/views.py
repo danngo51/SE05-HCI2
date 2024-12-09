@@ -170,7 +170,7 @@ def main(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
 
     ### SEARCH BAR: FILTERING ###
-    limit = 10
+    limit = 20
     if button_clicked == "filter" and search_query:
         print("Filtering with search query")
         recipes = get_personalized_recommendations_with_health_concerns_with_search(profile, query=search_query, threshold_search=0.5, limit=limit)
