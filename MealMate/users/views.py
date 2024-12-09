@@ -196,37 +196,7 @@ def change_options(request):
 
     if request.method == 'POST':
         # Handle health concerns
-        new_health_concerns = request.POST.getlist('new_hc[]')
-        existing_health_concerns = request.POST.getlist('existing_hc[]')
-
-        # Handle budget
-        selected_budget_id = request.POST.get('budget')
-
-        # Save the selected budget to the user's profile
-        if selected_budget_id:
-            try:
-                selected_budget = Budget.objects.get(id=selected_budget_id)
-                profile.budget = selected_budget
-                profile.save()
-            except Budget.DoesNotExist:
-                # Handle the case where the budget ID is invalid
-                pass
-
-        # Handle diet styles
-        new_diets = request.POST.getlist('new_diet[]')
-        existing_diets = request.POST.getlist('existing_diet[]')
-
-        # Handle preferences
-        new_dishes = request.POST.getlist('new_dish[]')
-        existing_dishes = request.POST.getlist('existing_dish[]')
-
-        # Update the user's profile
-        profile.health_concerns = existing_health_concerns + new_health_concerns
-        profile.diet = existing_diets + new_diets
-        profile.preferred_cuisines = existing_dishes + new_dishes
-        profile.save()
-
-        generate_user_profile_embedding(user = profile.user)
+        options(request, profile)
         return redirect('main')  # Redirect to main page
 
     return render(request, 'users/change_options.html', {
@@ -238,13 +208,10 @@ def change_options(request):
     })
 
 
-
-
 @login_required
 def profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     return render(request, 'users/profile_details.html',{'profile': profile})
-
 
 
 @login_required
@@ -253,8 +220,7 @@ def change_preferences(request):
     budgets = Budget.objects.all() 
     if request.method == 'POST':
         # Handle health concerns
-        change_options(request, profile)
-        return redirect('main')  # Redirect to main page
+        options(request, profile)
 
     return render(request, 'users/profile_change_options.html', {
         'existing_health_concerns': profile.health_concerns,
@@ -273,7 +239,7 @@ def history(request):
     return render(request, 'users/profile_history.html', context)
 
 
-def change_options(request, profile):
+def options(request, profile):
     new_health_concerns = request.POST.getlist('new_hc[]')
     existing_health_concerns = request.POST.getlist('existing_hc[]')
 

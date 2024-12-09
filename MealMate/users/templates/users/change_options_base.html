@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change My Options</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'users/css/change_options.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/change_options_base.css' %}">
+    {% block extra_styles %}
+    <!-- Additional styles for specific pages -->
+    {% endblock %}
     <script src="{% static 'users/scripts/script.js' %}" defer></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container-bg ">
         <button class="close-button" onclick="history.back()">✖</button>
+        {% block content %}
+        <!-- Placeholder for specific page content -->
+        {% endblock %}
     </div>
 </body>
 
