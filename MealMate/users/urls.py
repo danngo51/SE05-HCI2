@@ -22,7 +22,7 @@ urlpatterns = [
     path('main/', views.main, name='main'),
     path('recipe/<int:pk>/', views.recipe, name='recipe'),
     path('change-options/', views.change_options, name='change_options'),
-    
+    path('change-preferences/', views.change_preferences, name='change_preferences'),
     path('recipe/<int:pk>/rating', views.recipe_rating, name='recipe_rating'),
     path('profile/ratings/', views.profile_ratings, name='profile_ratings'),
 ]

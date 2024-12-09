@@ -209,3 +209,16 @@ tr:hover {
     font-weight: bold;
     margin-top: 15px;
 }
+
+
+
+
+/* Main Content: Independent scrolling */
+.main-content {
+    position: relative;
+    height: 100%; /* Full height of the viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+}

@@ -1,0 +1,144 @@
+<div class="options">
+    <form method="post" id="pref-form">
+        {% csrf_token %}
+    <!-- Section 1: Health Concerns -->
+        <div class="option-section">
+            <h2>1. Health concerns</h2>
+            <p>Allergies and health conditions<br>(e.g., diabetes, celiac disease, hypertension, etc.)</p>
+            <!-- Input list container -->
+            <div id="input-list-container-health-concern" class="input-list-container">
+                <!-- Existing health concerns (locked for editing) -->
+                {% for concern in existing_health_concerns %}
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input type="text" name="existing_hc[]" value="{{ concern }}" class="health-input" readonly>
+                        <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Button to dynamically add a new input -->
+            <button type="button" class="add-button" onclick="addInput_health_concern()">+ Add</button>
+        </div>
+        <hr>
+    
+        <!-- Section 2: Budget -->
+        <div class="option-section">
+            <h2>2. Budget</h2>
+            <p>For one meal, one person.</p>
+            {% for budget in budgets %}
+            <div class="option">
+                <input type="radio" 
+                    id="budget{{ forloop.counter }}" 
+                    name="budget" 
+                    value="{{ budget.id }}" 
+                    {% if selected_budget and budget.id == selected_budget.id %}checked{% endif %}>
+                <label for="budget{{ forloop.counter }}">
+                    {{ budget.name }} ({{ budget.min_value }}$- {{ budget.max_value }}$)
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+
+        <!-- Section 3: Diet Styles -->
+        <div class="option-section">
+            <h2>3. Dietary preferences or needs</h2>
+            <p>(e.g., vegetarian, low-carb, calorie-restricted, gluten-free, etc.)</p>
+            <!-- Input list container -->
+            <div id="input-list-container-diet" class="input-list-container">
+                {% for diet in existing_diets %}
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input type="text" name="existing_diet[]" value="{{ diet }}" class="health-input" readonly>
+                        <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Button to dynamically add a new input -->
+            <button type="button" class="add-button" onclick="addInput_diet()">+ Add</button>
+        </div>
+        <hr>
+
+        <!-- Section 4: Preferences -->
+        <div class="option-section">
+            <h2>4. Your favorite type of food</h2>
+            <p>Any specific cuisines, meals, or ingredients?<br>(e.g., Mexican food, noodles, shrimp, etc.)</p>
+            <!-- Input list container -->
+            <div id="input-list-container-dish" class="input-list-container">
+                {% for dish in existing_dishes %}
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input type="text" name="existing_dish[]" value="{{ dish }}" class="health-input" readonly>
+                        <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Button to dynamically add a new input -->
+            <button type="button" class="add-button" onclick="addInput_dish()">+ Add</button>
+        </div>
+        <!-- Save Changes Button -->
+        <button class="save-button" onclick="submitForm()">Save changes</button>
+    </form>
+</div>
+
+<script>
+    function addInput_health_concern() {
+        const container = document.getElementById('input-list-container-health-concern');
+        const newInputContainer = document.createElement('div');
+        newInputContainer.classList.add('input-container');
+
+        newInputContainer.innerHTML = `
+            <div class="input-wrapper">
+                <input type="text" name="new_hc[]" placeholder="Enter your health concerns." class="health-input">
+                <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+            </div>
+        `;
+        container.appendChild(newInputContainer);
+    }
+
+    function addInput_diet() {
+        const container = document.getElementById('input-list-container-diet');
+        const newInputContainer = document.createElement('div');
+        newInputContainer.classList.add('input-container');
+
+        newInputContainer.innerHTML = `
+            <div class="input-wrapper">
+                <input type="text" name="new_diet[]" placeholder="Enter your diet preferences." class="health-input">
+                <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+            </div>
+        `;
+        container.appendChild(newInputContainer);
+    }
+
+    function addInput_dish() {
+        const container = document.getElementById('input-list-container-dish');
+        const newInputContainer = document.createElement('div');
+        newInputContainer.classList.add('input-container');
+
+        newInputContainer.innerHTML = `
+            <div class="input-wrapper">
+                <input type="text" name="new_dish[]" placeholder="Enter your preferred dishes." class="health-input">
+                <button type="button" class="delete-button" onclick="deleteInputField(this)">×</button>
+            </div>
+        `;
+
+        container.appendChild(newInputContainer);
+    }
+
+    function deleteInputField(button) {
+        const inputContainer = button.closest('.input-container');
+        inputContainer.remove();
+    }
+
+    function submitForm(event) {
+        event.preventDefault(); // Prevent default anchor behavior
+        const form = document.getElementById('pref-form');
+        form.submit(); // Submit the form programmatically
+        
+    }
+</script>

@@ -9,22 +9,21 @@ body {
     margin: 0;
     padding: 0;
     overflow-y: auto; /* 스크롤 활성화 */
-    background: url('/static/users/images/changeoptions_bg.png') no-repeat center center;
-    background-size: cover; /* 이미지가 화면에 꽉 차도록 설정 */
-    background-attachment: scroll;
 }
 
 .container {
     position: relative;
-    max-width: 800px;
-    margin: 20px auto;
+    margin-left: 260px; /* Offset by the width of the sidebar */
     padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background: url('/static/users/images/changeoptions_bg.png') no-repeat center center; /* Background image */
+    background-size: cover;
+    background-attachment: scroll; /* Ensure the image scrolls with the content */
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
     -webkit-backdrop-filter: brightness(0.8) blur(1px);
     backdrop-filter: brightness(0.8) blur(1px);
+    overflow-y: auto;
+    min-height: calc(100vh - 40px); /* Ensure it spans the height of the viewport */
 }
 
 /* Close 버튼 */

@@ -1,4 +1,4 @@
-{% extends 'users/change_options_base.html' %}
+{% extends 'users/profile_base.html' %}
 
 {% block title %}Preferences{% endblock %}
 
@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% include 'users/options.html' %}
-    </div>
+
+<div class="container">
+    {% include 'users/options.html' %}
+</div>
 {% endblock %}
