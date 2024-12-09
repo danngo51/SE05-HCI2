@@ -109,8 +109,9 @@ cursor: pointer;
 
 .overlay-text {
     color: #ffffff;
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 20px;
+    letter-spacing: 0.5px;
 }
 
 .button {

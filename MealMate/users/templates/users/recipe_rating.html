@@ -41,18 +41,20 @@
         button {
             display: inline-block;
             background-color: #FF8C42;
-            color: #fff;
+            color: #09393D;
             padding: 10px 20px;
+            border: 3px solid #09393D;
             border-radius: 25px;
             font-size: 1.2rem;
+            font-weight: 700;
             text-decoration: none;
-            transition: background-color 0.3s ease;
-            border: none;
+            transition: transform 0.2s ease, border-color 0.2s ease;
             cursor: pointer;
         }
         button:hover {
+            text-decoration: underline;
             background-color: #FF6A00;
-            color: #fff;
+            color: #09393D;
         }
     </style>
 </head>
@@ -60,27 +62,9 @@
     <div class="container">
         <h1>Rate the Recipe</h1>
         <h2>{{ recipe.title }}</h2>
-        <p>{{ recipe.description }}</p>
+        <!-- <p>{{ recipe.description }}</p> -->
 
-        <!-- Average Rating -->
-        <p>
-            Average Rating: 
-            {% if average_rating %}
-                {{ average_rating|floatformat:1 }} ⭐
-                ({{ rating_count }} {{ rating_count|pluralize:"person has,people have" }} rated)
-            {% else %}
-                No ratings yet.
-            {% endif %}
-        </p>
-
-        <!-- User's Rating -->
-        {% if user_rating %}
-        <p>Your Rating: {{ user_rating.get_rating_display }}</p>
-        {% else %}
-        <p>You have not rated this recipe yet.</p>
-        {% endif %}
-
-        <!-- Rating Form -->
+        <!-- 평점 제출 폼 -->
         <div class="rating-form">
             <form method="post">
                 {% csrf_token %}
@@ -88,6 +72,23 @@
                 <button type="submit">Submit Rating</button>
             </form>
         </div>
+
+        <!-- 평균 평점 및 총 평가 수 -->
+        <p>
+            Average Rating: {{ average_rating|floatformat:1 }} ⭐ 
+            ({{ rating_count }} ratings)
+        </p>
+        {% if user_rating %}
+        <p>Your Rating: {{ user_rating.rating }}</p>
+        {% endif %}
     </div>
+
+    <!-- 팝업 닫기 스크립트 -->
+    <script>
+        {% if popup_close %}
+        window.opener.location.reload(); // 메인 페이지 새로고침
+        window.close(); // 팝업 닫기
+        {% endif %}
+    </script>
 </body>
 </html>

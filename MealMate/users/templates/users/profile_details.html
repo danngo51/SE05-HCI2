@@ -43,13 +43,14 @@
 
         <button class="save-btn" type="submit">Save</button>
     </form>
-    <!-- {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} -->
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="success-message">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 </div>
 {% endblock %}

@@ -1,11 +1,8 @@
 @import url('/static/users/css/base.css');
 
-* {
-    font-family: 'Rimouski';
-}
 
 body {
-    /* font-family: Arial, sans-serif; */
+    font-family: 'Rimouski';
     margin: 0;
     padding: 0;
     /* background: linear-gradient(to bottom, #fff, #f7f1f1); */
@@ -41,6 +38,7 @@ body {
 }
 
 .question-container .subtitle {
+    font-family: 'Poppins';
     font-size: 1rem;
     color: #666;
     margin-bottom: 20px;
@@ -60,6 +58,7 @@ body {
 }
 
 .health-input {
+    font-family: 'Rimouski';
     width: 80%;
     padding: 10px;
     font-size: 1rem;
@@ -76,7 +75,8 @@ body {
 }
 
 .add-button {
-    margin-top: 1px; /* Add 버튼 위의 간격도 줄이기 위해 기존 15px에서 10px로 변경 */
+    font-family: 'Rimouski';
+    margin-top: 20px; 
     padding: 7px 15px;
     font-size: 1rem;
     /* background-color: #00a86b; */
@@ -193,6 +193,7 @@ body {
 }
 
 .final-navigation .explore-button {
+    font-family: 'Rimouski';
     background-color: #65CB9B;
     color: #09393D;
     border: 3px solid #09393D;

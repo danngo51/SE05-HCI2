@@ -105,23 +105,24 @@ body {
  }
 
  .logout-button {
-     background-color: #ff4d4d;
+     background-color: #65CB9B;
      /* Example red color */
-     color: #ffffff;
+     color: #09393D;
      padding: 10px 20px;
-     border: none;
-     border-radius: 15px;
+     border: 3px solid #09393D;
+     border-radius: 25px;
      font-size: 16px;
      font-weight: bold;
      cursor: pointer;
      text-align: center;
      display: inline-block;
      transition: background-color 0.3s;
+     margin-top: 40px;
  }
 
  .logout-button:hover {
-     background-color: #cc0000;
-     /* Darker red on hover */
+    text-decoration: underline;
+    background-color: #ff8e51;
  }
 
  .main-content {
@@ -161,7 +162,8 @@ body {
 
  .save-btn {
      background-color: #ffa07a;
-     color: white;
+     color: #09393D;
+     font-weight: 600;
      border: none;
      padding: 10px 20px;
      font-size: 16px;
@@ -200,4 +202,10 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 15px;
 }

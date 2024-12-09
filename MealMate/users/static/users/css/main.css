@@ -1,11 +1,8 @@
 @import url('/static/users/css/base.css');
 
-* {
-    font-family: 'Rimouski';
-}
-
 /* Body 스타일 */
 body {
+    font-family: 'Rimouski';
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
@@ -17,8 +14,10 @@ body {
     align-items: center;
     justify-content: space-between;
     background-color: #ffffff;
-    padding: 10px 20px;
+    padding: 5px 15px; 
     border-bottom: 2px solid #f0f0f0;
+    height: 85px; 
+    box-sizing: border-box; 
 }
 
 .explore-header .logo {
@@ -31,22 +30,33 @@ body {
     margin-right: 10px;
 }
 
+.instructions {
+    text-align: center; 
+    font-size: 1.7rem; 
+    /* font-weight: bold;  */
+    margin-top: 60px; 
+    color: #333;
+}
+
 /* 검색창 스타일 */
 .search-bar {
     display: flex;
     align-items: center;
-    margin: 0 20px;
-    width: 100%; /* 부모 컨테이너의 전체 너비를 사용 */
+    justify-content: center; 
+    margin: 18px auto; 
+    margin-bottom: 80px;   
+    width: fit-content; 
 }
 
 .search-bar input {
+    font-family: 'Rimouski';
     flex: 1; /* 버튼을 제외한 공간을 모두 차지 */
     min-width: 550px; /* 최소 너비 설정 */
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ddd;
     border-right: none;
-    border-radius: 5px 0 0 5px;
+    border-radius: 12px 0 0 12px;
     outline: none;
     box-sizing: border-box;
 }
@@ -57,8 +67,13 @@ body {
     background-color: #ff8c42;
     color: white;
     border: none;
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 12px 12px 0;
     cursor: pointer;
+}
+
+.search-bar button .button-image {
+    width: 19px; /* 이미지 크기 조정 */
+    height: 19px;
 }
 
 /* 사용자 작업 (Preferences & 프로필) */
@@ -69,25 +84,30 @@ body {
 }
 
 .user-actions .preferences {
-    padding: 10px 15px;
-    font-size: 1rem;
-    background-color: #ff8c42;
-    color: white;
-    border: none;
-    border-radius: 15px;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #65CB9D;
+    color: #09393D;
+    border: 3px solid #09393D;
+    border-radius: 25px;
     cursor: pointer;
     text-decoration: none;
-    transition: background-color 0.2s ease;
-    width: 110px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    text-align: center;
+    width: 130px;
+    margin-right: 5px;
 }
 
 .user-actions .preferences:hover {
-    background-color: #e67e34; /* 호버 효과 */
+    text-decoration: underline;
+    background-color: #ff8e51;
+    transform: scale(1.02);
 }
 
 .user-actions .profile-button {
     background: none;
-    border: none;
+    border: 3px solid #09393D;
     padding: 0;
     cursor: pointer;
     display: flex;
@@ -104,16 +124,12 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%; /* 이미지를 버튼에 맞게 원형으로 */
-    border: 2px solid #ddd;
+    /* border: 2px solid #ddd; */
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .user-actions .profile-button:hover {
     transform: scale(1.1); /* 버튼 전체가 살짝 커짐 */
-}
-
-.user-actions .profile-button:hover img {
-    border-color: #ff8c42; /* 테두리 색 강조 */
 }
 
 /* 메뉴 카드 섹션 */
@@ -123,6 +139,7 @@ body {
     flex-wrap: wrap;
     gap: 60px;
     margin-top: 20px;
+    margin-bottom: 150px;
 }
 
 .menu-item {
@@ -159,6 +176,7 @@ body {
 
 
 .menu-item h3 {
+    text-transform: capitalize;
     font-size: 1.8rem;
     text-decoration: underline;
     color: #333;
@@ -247,12 +265,12 @@ a {
 
 /* 기본 태그 스타일 */
 .tags-container .tag {
+    font-size: 1.1em;
     color: black;
-    padding: 5px 8px;
-    border-radius: 9px;
+    padding: 5px 10px;
+    border-radius: 11px;
     display: inline-block;
-    font-weight: 500;
-    margin: 1px;
+    font-weight: 600;
 }
 
 /* 배경색 반복 설정 */
@@ -273,6 +291,50 @@ a {
 }
 
 /* 최대 10개 태그만 표시 */
-.tags-container .tag:nth-child(n+11) {
-    display: none; /* 11번째 태그부터 숨김 */
+.tags-container .tag:nth-child(n+7) {
+    display: none; 
+}
+
+.cooking-time {
+    padding-bottom: 16px;
+}
+
+#loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* 배경 */
+    display: flex; /* 기본적으로 로딩 화면 표시 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    z-index: 9999; /* 다른 콘텐츠 위에 표시 */
+    font-size: 1.5rem; /* 텍스트 크기 */
+    font-weight: bold; /* 텍스트 굵기 */
+    color: #333; /* 텍스트 색상 */
+}
+
+#loading-indicator p {
+    margin: 0;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+#loading-screen img {
+    width: 50px;
+    height: 50px;
+}
+#content {
+    display: none; /* 처음에는 숨김 */
 }

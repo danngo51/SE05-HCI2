@@ -17,16 +17,6 @@
             </a>
             <h1 class="meal-mate-title">MealMate</h1>
         </div>
-        <div class="search-bar">
-            <form method="get" action="{% url 'main' %}">
-                <input 
-                    type="text" 
-                    name="query" 
-                    placeholder="Search, e.g. Indian, pasta, spicy etc." 
-                    value="{{ search_query|default:'' }}">
-                <button type="submit" name="button" value="filter">🔍</button>
-            </form>
-        </div>
         <div class="user-actions">
             <a href="{% url 'change_options' %}" class="preferences">My Preferences</a>
             <button class="profile-button" onclick="window.location.href='{% url 'profile_details' %}'">
@@ -36,21 +26,39 @@
     </header>
 
     <main>
+        <div class="instructions">
+            Personalized, Randomized Meals Just for You.
+        </div>
+
+        <div class="search-bar">
+            <form method="get" action="{% url 'main' %}">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="Search your own keywords (e.g. Indian, pasta, spicy etc)." 
+                    value="{{ search_query|default:'' }}">
+                <button type="submit" name="button" value="filter">
+                    <img src="{% static 'core/images/search.png' %}" alt="Search" class="button-image">
+                </button>
+                <!-- <button type="submit" name="button" value="filter">🔍</button> -->
+            </form>
+        </div>
+
         <div class="menu-items">
             {% if recipes|length == 0 %}
-                <h2>No recipes found.</h2>
+                <h2>No meals found.</h2>
             {% else %}
                 {% for recipe in recipes %}
                     <div class="menu-item">
                         <a href="{% url 'recipe' pk=recipe.id %}">
                             <h3>{{ recipe.title }}</h3>
-                            <h4>
+                            <h4 class="cooking-time">
                                 Cooking time:
                                 <span>{{ recipe.minutes|format_time }}</span>
-                            </h4>                            
+                            </h4>                         
                             <h5 class="tags-container">
                                 {% for tag in recipe.tags.all %}
-                                    {% if tag.name not in 'time-to-make,course,main-ingredient,cuisine,preparation,occasion,equipment' %}
+                                    {% if tag.name not in 'time-to-make,technique,course,main-ingredient,cuisine,preparation,occasion,equipment' %}
                                         <span class="tag">{{ tag.name }}</span>
                                     {% endif %}
                                 {% endfor %}
@@ -61,5 +69,6 @@
             {% endif %}
         </div>
     </main>
+
 </body>
 </html>

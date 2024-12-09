@@ -5,7 +5,7 @@
 {% block content %}
 <div class="question-container">
     <h1>Q. What's your budget?</h1>
-    <p class="subtitle">For one meal, one person</p>
+    <p class="subtitle">For one meal, one person.</p>
 
     <form id="budget-form" method="POST" action="{% url 'budget' %}" class="budget-form">
         {% csrf_token %}
@@ -17,7 +17,7 @@
                    value="{{ budget.id }}" 
                    {% if selected_budget and budget.id == selected_budget.id %}checked{% endif %}>
             <label for="budget{{ forloop.counter }}">
-                {{ budget.name }} ({{ budget.min_value }} - {{ budget.max_value }})
+                {{ budget.name }} ({{ budget.min_value }}$ - {{ budget.max_value }}$)
             </label>
         </div>
         {% endfor %}

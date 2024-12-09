@@ -11,19 +11,12 @@
     <div class="recipe-header">
         <h1>{{ recipe.title }}</h1>
 
-        <div>
-            <a href="{% url 'main' %}" class="back-button">Back</a>
-        </div>
+        <button class="close-button" onclick="history.back()">✖</button>
     </div>
 
     <div class="recipe-info">
         <!-- 왼쪽 단 -->
         <div class="left-column">
-            <!-- Description -->
-            <div class="description">
-                <p>Description: {{ recipe.description }}</p>
-            </div>
-    
             <!-- Estimated Time -->
             <div class="time-servings">
                 <div class="time">
@@ -36,20 +29,24 @@
                     {% endif %}
                 </div>
             </div>
+
+            <div class="divider"></div>
+            
+            <!-- Description -->
+            <div class="description">
+                <p><b>🍳A Note from the Recipe Author:</b></p>
+                <p>{{ recipe.description }}</p>
+            </div>
         </div>
     
         <!-- 오른쪽 단 -->
-        <div class="right-column">
-            <!-- Rating Button -->
-            <div class="rating-button-container">
-                <a href="{% url 'recipe_rating' pk=recipe.id %}" class="rating-button">Rate this Recipe</a>
-            </div>
-    
+        <div class="right-column">    
             <!-- Nutrition Facts -->
             <div class="Nutrition">
                 <table>
                     <tr>
                         <td colspan="2"><strong>Nutrition Facts</strong></td>
+                        <td colspan="2" style="font-size: 14px; vertical-align: middle;">(Amount: per serving)</td>
                     </tr>
                     <tr>
                         <td>Calories:</td>
@@ -82,7 +79,7 @@
         <!-- Ingredients Section -->
         <div class="ingredients">
             <h2>Ingredients</h2>
-            <p><strong>For the {{ recipe.title }}:</strong></p>
+            <!-- <p><strong>For the {{ recipe.title }}:</strong></p> -->
             <ul>
                 {% for ingredient in recipe.ingredients.all %}
                     <li>{{ ingredient.name }}</li>
@@ -99,6 +96,34 @@
                 {% endfor %}
             </ol>
         </div>
+    
+    </div>
+
+    <!-- Rating Button -->
+    <div class="rating-button-container">
+        <button onclick="openRatingPopup({{ recipe.id }})" class="rating-button">Rate this Recipe</button>
     </div>
 </body>
+
+<script>
+    function openRatingPopup(recipeId) {
+        const popupWidth = 800;  // 팝업창 너비
+        const popupHeight = 600; // 팝업창 높이
+
+        // 현재 화면 크기
+        const screenWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+        const screenHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+
+        // 정중앙 위치 계산
+        const left = (screenWidth - popupWidth) / 2 + window.screenX; // 가로 중앙
+        const top = (screenHeight - popupHeight) / 2 + window.screenY; // 세로 중앙
+
+        const popupUrl = "{% url 'recipe_rating' 0 %}".replace('0', recipeId); 
+        window.open(
+        popupUrl,
+        'RatingPopup',
+        `width=${popupWidth},height=${popupHeight},left=${left},top=${top},scrollbars=yes`
+         );
+    }
+</script>
 </html>

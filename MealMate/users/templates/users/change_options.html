@@ -17,7 +17,7 @@
             <!-- Section 1: Health Concerns -->
                 <div class="option-section">
                     <h2>1. Health concerns</h2>
-                    <p>Allergies and health conditions (e.g. diabetes, celiac disease, hypertension)</p>
+                    <p>Allergies and health conditions<br>(e.g., diabetes, celiac disease, hypertension, etc.)</p>
                     <!-- Input list container -->
                     <div id="input-list-container-health-concern" class="input-list-container">
                         <!-- Existing health concerns (locked for editing) -->
@@ -39,7 +39,7 @@
                 <!-- Section 2: Budget -->
                 <div class="option-section">
                     <h2>2. Budget</h2>
-                    <p>For one meal, one person</p>
+                    <p>For one meal, one person.</p>
                     {% for budget in budgets %}
                     <div class="option">
                         <input type="radio" 
@@ -57,8 +57,8 @@
 
                 <!-- Section 3: Diet Styles -->
                 <div class="option-section">
-                    <h2>3. Diet styles</h2>
-                    <p>Specific diets, food restrictions, or ingredients you avoid</p>
+                    <h2>3. Dietary preferences or needs</h2>
+                    <p>(e.g., vegetarian, low-carb, calorie-restricted, gluten-free, etc.)</p>
                     <!-- Input list container -->
                     <div id="input-list-container-diet" class="input-list-container">
                         {% for diet in existing_diets %}
@@ -77,8 +77,8 @@
 
                 <!-- Section 4: Preferences -->
                 <div class="option-section">
-                    <h2>4. Preferences</h2>
-                    <p>Any specific cuisines, meals or ingredients that you really like</p>
+                    <h2>4. Your favorite type of food</h2>
+                    <p>Any specific cuisines, meals, or ingredients?<br>(e.g., Mexican food, noodles, shrimp, etc.)</p>
                     <!-- Input list container -->
                     <div id="input-list-container-dish" class="input-list-container">
                         {% for dish in existing_dishes %}

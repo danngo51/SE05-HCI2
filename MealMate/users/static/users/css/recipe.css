@@ -1,11 +1,8 @@
 @import url('/static/users/css/base.css');
 
-* {
-    font-family: 'Rimouski';
-}
-
 /* Body 스타일 */
 body {
+    font-family: 'Rimouski';
     margin: 0;
     padding: 20px;
     background-color: #f9f9f9;
@@ -16,37 +13,35 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff;
+    background-color: #65CB9D;
     padding: 10px 20px;
+    margin: 15px 50px;
     border-bottom: 2px solid #ddd;
 }
 
 .recipe-header h1 {
+    text-transform: capitalize;
     font-size: 2rem;
     color: #333;
     margin: 0;
 }
 
-.back-button {
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border-radius: 20px;
+/* Close 버튼 */
+.close-button {
+    position: absolute;
+    top: 45px;
+    right: 80px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
     cursor: pointer;
-    text-decoration: none;
-    font-weight: bold;
-    background-color: #65CB9B;
-    color: #09393D;
-    border: 3px solid #09393D;
-}
-
-.back-button:hover {
-    text-decoration: underline;
-    background-color: #ff8e51;
 }
 
 .time {
-    font-size: 18px; /* 기본 폰트 크기 */
-    font-weight: bold; /* 텍스트 강조 */
+    padding-left: 20px;
+    margin-top: 15px;
+    font-size: 20px; /* 기본 폰트 크기 */
 }
 
 .time span {
@@ -55,20 +50,21 @@ body {
 }
 
 .time span:first-child {
-    font-size: 16px; /* 첫 번째 span의 폰트 크기 */
+    font-size: 20px; /* 첫 번째 span의 폰트 크기 */
     color: #555; /* 덜 강조된 색상 */
 }
 
 .time span:last-child {
     font-size: 24px; /* 두 번째 span의 폰트 크기 */
     color: #000; /* 강조된 색상 */
+    font-weight: bold; /* 텍스트 강조 */
 }
 
 
 
 /* 요리 정보 섹션 */
 .recipe-info {
-    margin-top: 20px;
+    margin: 20px 50px;
     background-color: #ffffff;
     padding: 15px;
     border-radius: 10px;
@@ -98,8 +94,12 @@ body {
 }
 
 .recipe-info .description {
-    margin-bottom: 20px;
-    font-size: 1rem;
+    font-family: 'Schoolbell';
+    margin-top: 35px;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+    padding-left: 20px;
+    padding-right: 70px;
     color: #555;
 }
 
@@ -130,51 +130,71 @@ body {
 .recipe-content {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin: 20px 50px;
     gap: 20px;
 }
 
 /* Rating Button */
 .rating-button-container {
     width: 100%; /* 필요한 경우 너비 설정 */
-    text-align: right;
+    text-align: center;
 }
 
 .rating-button {
+    font-family: 'Rimouski';
+    font-weight: 700;
     display: inline-block;
     background-color: #FF8C42;
-    color: #fff;
+    color: #09393D;
     padding: 10px 20px;
+    border: 3px solid #09393D;
     border-radius: 25px;
     font-size: 1.2rem;
     text-decoration: none;
-    transition: background-color 0.3s ease;
-    border: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 200px;
 }
 
 .rating-button:hover {
+    text-decoration: underline;
     background-color: #FF6A00;
-    color: #fff;
+    color: #09393D;
+    transform: scale(1.1);
 }
 
-.ingredients, .instructions {
+.ingredients {
     background-color: #ffffff;
-    padding: 15px;
+    padding: 30px;
+    padding-top: 8px;
     border-radius: 10px;
-    width: 48%;
+    width: 25%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.instructions {
+    background-color: #ffffff;
+    padding: 30px;
+    padding-top: 8px;
+    border-radius: 10px;
+    width: 75%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .ingredients h2, .instructions h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #333;
 }
 
 .ingredients ul, .instructions ol {
+    font-family: 'Poppins';
+    font-weight: 400;
     margin-top: 10px;
     padding-left: 20px;
     color: #555;
+    font-size: 18px;
+    line-height: 1.4;
 }
 
 .ingredients ul ul, .instructions ol ul {
@@ -192,6 +212,7 @@ body {
 /* Nutrition Facts */
 .Nutrition {
     width: 100%; /* 테이블을 부모에 맞춤 */
+    margin-right: 40px;
 }
 
 .Nutrition table {
@@ -219,6 +240,12 @@ body {
 
 .Nutrition td[colspan="2"] {
     text-align: center; /* Nutrition Facts 중앙 정렬 */
-    font-size: 1.2em; /* 글자 크기 키움 */
+    font-size: 1.2em; 
     padding: 10px 0;
+}
+
+.divider {
+    width: 500px;
+    border-top: 1px solid #ccc; /* 구분선 색상과 두께 */
+    margin: 0px 20px; /* 위아래 여백 */
 }

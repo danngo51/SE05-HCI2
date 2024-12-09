@@ -20,6 +20,7 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 
 # LLM
@@ -51,12 +52,9 @@ class CustomLoginView(LoginView):
     form_class = EmailLoginForm
     template_name = 'users/login.html'
 
-
-
-
 class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'users/password_change_form.html'
-    success_url = '/profile/'
+    template_name = 'users/profile_details.html'
+    success_url = reverse_lazy('profile_details')
 
     def form_valid(self, form):
         messages.success(self.request, "Your password was successfully changed!")
@@ -274,25 +272,34 @@ def recipe_rating(request, pk):
         if form.is_valid():
             rating_value = form.cleaned_data['rating']
             result = handle_rating(request.user, recipe.id, rating_value)
-            messages.success(request, result['message'])
-            return redirect('recipe', pk=pk)
+            # messages.success(request, result['message'])
+            # return redirect('recipe', pk=pk)
+            return render(request, 'users/recipe_rating.html', {
+                'recipe': recipe,
+                'form': form,
+                'user_rating': result['rating'],
+                'average_rating': result['average_rating'],
+                'rating_count': result['rating_count'],
+                'popup_close': True,  # 팝업 닫기 플래그
+            })
     else:
         # Pre-fill the form if the user has already rated the recipe
-        try:
-            user_rating = RecipeRating.objects.get(user=request.user, recipe=recipe)
-            form = RecipeRatingForm(initial={'rating': user_rating.rating})
-        except RecipeRating.DoesNotExist:
-            form = RecipeRatingForm()
+        # try:
+        #     user_rating = RecipeRating.objects.get(user=request.user, recipe=recipe)
+        #     form = RecipeRatingForm(initial={'rating': user_rating.rating})
+        # except RecipeRating.DoesNotExist:
+        #     form = RecipeRatingForm()
+        result = handle_rating(request.user, recipe.id)
+        form = RecipeRatingForm(initial={'rating': result['rating'].rating if result['rating'] else None})
 
-    result = handle_rating(request.user, recipe.id)
-    context = {
+    return render(request, 'users/recipe_rating.html', {
         'recipe': recipe,
         'form': form,
         'user_rating': result['rating'],
         'average_rating': result['average_rating'],
         'rating_count': result['rating_count'],
-    }
-    return render(request, 'users/recipe_rating.html', context)
+        'popup_close': False,
+    })
 
 @login_required
 def profile_ratings(request):
